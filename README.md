@@ -2,13 +2,13 @@
 
 ## Workflow
 
-### 1. AbAg Database construction (Fahsai, ________, ________)
+### 1. AbAg Database construction (Fahsai, David, ________)
   -	PDB90 dataset (PDB), CDR-fragment dataset (full Ab, SabDab)
   -	Blastp + MASTER for searching CDR-like regions in the PDB90 dataset (target) by CDR-fragment dataset (query)
   -	CACA + SASA to find the interacting (Ag-like) regions of the CDR-like regions within the same protein target
   -	Store the database
 
-### 2. CDR-like identification (________, ________)
+### 2. CDR-like identification (David, ________)
   - **Input = full epitope structure, Output = CDR-like candidate structures**
   -	Epitope fragments (target antigen), AbAg database
   -	Blastp + MASTER for searching for Ag-like regions in the AbAg database (target) by Epitope fragments (query)
