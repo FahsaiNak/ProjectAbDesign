@@ -8,13 +8,13 @@
   -	CACA + SASA to find the interacting (Ag-like) regions of the CDR-like regions within the same protein target
   -	Store the database
 
-### 2. CDR-like identification (David, ________)
+### 2. CDR-like identification (David, Lindsey)
   - **Input = full epitope structure, Output = CDR-like candidate structures**
   -	Epitope fragments (target antigen), AbAg database
   -	Blastp + MASTER for searching for Ag-like regions in the AbAg database (target) by Epitope fragments (query)
   -	Track back to the corresponding CDR-like regions of the matching Ag-like regions
 
-### 3. CDR selection and optimization (________, ________)
+### 3. CDR selection and optimization (Lindsey, ________)
   -	**Input = CDR-like candidate structures, Output = Optimized CDR candidate structures**
   -	Combine, rank and select CDR-like regions by their interactions with the epitopes and some properties (solubility)
   -	(optional) Contact residual optimization
