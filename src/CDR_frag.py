@@ -3,7 +3,8 @@ import argparse
 import pandas as pd
 from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser, PDBList
-import utils as ut
+import processing_utils as ut
+import fragmenting_utils as frut
 import os
 
 
@@ -29,21 +30,21 @@ def getInfo():
                    "start_residue_idx":[], "max_index_from_end":[]}
     for i, pdb in enumerate(pdb_lst):
         print(i+1, "/", len(pdb_lst), pdb, "is processing")
-        resolution = ut.get_resolution(pdb)
+        resolution = frut.get_resolution(pdb)
         cdr_files = ut.get_list_contains_str(files, pdb)
         for file in cdr_files:
             try:
                 CDR_pdb = PandasPdb().read_pdb(os.path.join(args.path, file))
                 atom_df = CDR_pdb.df["ATOM"]
-                residue_insertion_list = ut.get_residue_list_fromDF(atom_df)
-                residue_insertion_list_set = ut.get_residue_set_fromList(residue_insertion_list)
+                residue_insertion_list = frut.get_residue_list_fromDF(atom_df)
+                residue_insertion_list_set = frut.get_residue_set_fromList(residue_insertion_list)
                 num_residues = len(residue_insertion_list_set)
                 for start_residue_number in range(0,len(residue_insertion_list_set)-4+1):
                     start_residue = residue_insertion_list_set[start_residue_number]
                     start_residue_idx = residue_insertion_list.index(start_residue)
                     for fragment_length in range(4, num_residues-start_residue_number+1):
                         end_residue = residue_insertion_list_set[start_residue_number+fragment_length-1]
-                        max_index_from_end = ut.find_max_index(residue_insertion_list, end_residue)
+                        max_index_from_end = frut.find_max_index(residue_insertion_list, end_residue)
                         if max_index_from_end == 0:
                             max_index_from_end = -len(residue_insertion_list)
                         fragment_df = atom_df.iloc[start_residue_idx:-max_index_from_end]
@@ -75,7 +76,7 @@ def main():
         pdb_to_save = PandasPdb().read_pdb(os.path.join(args.path, file))
         atom_df = pdb_to_save.df["ATOM"]
         fragment_df = atom_df.iloc[start_residue_idx:-max_index_from_end]
-        residue_list = ut.get_residue_list_fromDF(fragment_df)
+        residue_list = frut.get_residue_list_fromDF(fragment_df)
         pdb_to_save.df['ATOM'] = pd.merge(pdb_to_save.df['ATOM'], fragment_df, how='inner')
         pdb_save_file_name = os.path.join(ut.checkDir(args.savePath), file[:-4]+'_frag_'+residue_list[0]+'_'+residue_list[-1]+'.pdb')
         pdb_to_save.to_pdb(path=pdb_save_file_name, records=['ATOM', 'OTHERS', 'ANISOU'], gz=False, append_newline=True)
