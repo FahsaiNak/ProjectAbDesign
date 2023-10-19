@@ -1,5 +1,43 @@
 # ProjectAbDesign
 
+## About
+This project transforms the antibody design framework developed by Aguilar Rangel et al. [cite](https://doi.org/10.1126/sciadv.abp9540) into an automated workflow.
+
+## Getting started
+
+### Prerequisites
+
+* Install [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) with python 3.11
+
+* Install [Master](https://grigoryanlab.org/master/): a rapid structural similarity search program
+
+### Installation
+
+1. Clone the repository
+   ```sh
+   git clone https://github.com/FahsaiNak/ProjectAbDesign.git
+   ```
+
+2. Create environment from environment.yml
+   ```sh
+   conda env create -f environment.yml
+   ```
+
+### Step 1: Antibody-Antigen database construction
+Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
+
+1. PDB90 database
+
+2. CDR database and fragmented-CDR datasets
+
+3. CDR-like region identification
+
+4. Antigen-like region identification
+
+5. AbAg Database
+
+### Step 2: Antigen epitope processing and its interacting-CDR-like searching
+
 ## Workflow
 
 ### 1. AbAg Database construction (Fahsai, David, Juan)
