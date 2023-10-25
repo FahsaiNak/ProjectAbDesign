@@ -24,3 +24,9 @@ def get_d3to1(aa_list):
     for aa in aa_list:
         seq.append(d3to1[aa])
     return ''.join(seq)
+
+
+def get_lineinlist(file):
+    with open(file, 'r') as f:
+        lines = [line.rstrip() for line in f]
+    return lines
