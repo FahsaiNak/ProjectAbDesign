@@ -1,4 +1,5 @@
 import processing_utils as ut
+import structure_utils as stut
 from Bio.PDB import PDBParser
 
 
@@ -22,4 +23,12 @@ def get_seq(matchfile):
     resname_list = [_.resname for _ in structure.get_residues()]
     return ut.get_d3to1(resname_list)
 
-
+def get_all_residues(matchfile):
+    residue_list = []
+    structure = stut.get_structurefromfile(matchfile)
+    for model in structure:
+        for chain in model:
+            for residue in chain:
+                res = f"{residue.id[1]}|{chain.id}|{residue.resname}"
+                residue_list.append(res)
+    return residue_list
