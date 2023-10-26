@@ -4,7 +4,7 @@ import pandas as pd
 from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser, PDBList
 import processing_utils as ut
-import fragmenting_utils as frut
+import structure_utils as frut
 import os
 
 
