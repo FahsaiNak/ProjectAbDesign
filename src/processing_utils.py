@@ -4,7 +4,7 @@ import os
 def checkDir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
-    return dir_path
+    return dir_path #does this function need to return something?
 
 
 def dropDup(x):
@@ -14,7 +14,7 @@ def dropDup(x):
 def get_list_contains_str(lst, string):
     return [val for val in lst if string in val]
 
-
+#TODO this method name is not very descriptive should be updated
 def call_d3to1():
     d3to1 = {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
             'ILE': 'I', 'PRO': 'P', 'THR': 'T', 'PHE': 'F', 'ASN': 'N',

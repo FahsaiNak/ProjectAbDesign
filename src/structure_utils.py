@@ -5,6 +5,20 @@ import processing_utils as ut
 
 
 def find_max_index(residue_insertion_list, end_residue):
+    '''Takes in a list of residues w/ insertions and returns
+        the max index for an end residue
+        Parmams
+        -------
+        residue_insertion_list: Series
+                                a series of residues w/ insertions
+        end_residue: str
+                     the end residue to find the index of
+                     e.g. '30' or '30A'
+        Returns
+        ------
+        index: int
+               the maximum index in the series with the end_residue
+        '''
     for index, residue in enumerate(reversed(residue_insertion_list)):
         if residue == end_residue:
             return index
