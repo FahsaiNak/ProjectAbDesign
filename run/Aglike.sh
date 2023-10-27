@@ -13,3 +13,4 @@ find  ../Datasets/AbAg -type file -name "*.pkl" > PDB.pkl.tmp
 echo "searching Ag-like regions"
 parallel -j 2 -a PDB.pkl.tmp findAglike
 rm PDB.pkl.tmp
+python ../src/create_AbAg.py --dir ../Datasets/AbAg
