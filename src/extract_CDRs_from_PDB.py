@@ -1,6 +1,7 @@
 import pandas as pd
 from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser
+import processing_utils
 import os
 
 #GLOBAL VARIABLES
@@ -14,6 +15,9 @@ d3to1= {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
 #  Chothia numbering
 CDR_Hpos = {'H1': [26,32], 'H2': [52,56], 'H3': [95,102]}
 CDR_Lpos = {'L1': [24,34], 'L2': [50,56], 'L3': [89,97]}
+
+# Chain Letters for heavy and light chain
+CHAIN_LETTERS = ['H','L']
 
 #max CDR-sequence length = 20
 # set to minimize compute ime
@@ -145,6 +149,10 @@ def save_CDR(CDR_df, pdb_id, CDR_type):
                             append_newline=True)
 
 def main():
+
+    processing_utils.checkDir(CHOTHIA_PDB_FILE_PATH)
+    processing_utils.checkDir(CDR_FILE_PATH)
+
     files = os.listdir(CHOTHIA_PDB_FILE_PATH)
 
     batch_start = 0
@@ -165,53 +173,31 @@ def main():
             #by checking for presence of nitrogen atom
             #assumes that if N is present then it's full chain
             if ELEMENT_TO_CHECK in atom_name_series.values:
-                
-                #TODO make method because this code is copied
-                heavy_chain_pdb_letter = get_letter_to_extract(head_df, 'H')
 
-                if heavy_chain_pdb_letter is None:
-                    print(f'No H chain in file')
-                else:
+                for chain_letter in CHAIN_LETTERS:
 
-                    chain_df = atom_df[atom_df.chain_id == heavy_chain_pdb_letter].reset_index(drop=True)
-                    
-                    for CDR_type, CDR_bounds in CDR_Hpos.items():
+                    chain_pdb_letter = get_letter_to_extract(head_df, chain_letter)
+
+                    if chain_pdb_letter is None:
+                        print(f'No H chain in file')
+                    else:
+
+                        chain_df = atom_df[atom_df.chain_id == chain_pdb_letter].reset_index(drop=True)
                         
-                        CDR_df = extract_CDR(chain_df, CDR_bounds)
-                        
-                        save_CDR(CDR_df, pdb_id, CDR_type)
+                        for CDR_type, CDR_bounds in CDR_Hpos.items():
+                            
+                            CDR_df = extract_CDR(chain_df, CDR_bounds)
+                            
+                            save_CDR(CDR_df, pdb_id, CDR_type)
 
-                        CDR_save_name = CDR_FILE_PATH +'/' +pdb_id+'_'+CDR_type+'.pdb' 
-                        CDR_length = get_CDR_length(pdb_id, CDR_save_name)
+                            CDR_save_name = CDR_FILE_PATH +'/' +pdb_id+'_'+CDR_type+'.pdb' 
+                            CDR_length = get_CDR_length(pdb_id, CDR_save_name)
 
-                        if CDR_length is None:
-                            os.remove(CDR_save_name)
-                        elif CDR_length >= MAX_CDR_LENGTH:
-                            print(f'{CDR_save_name} too long. Removing file')
-                            os.remove(CDR_save_name)
-
-                light_chain_pdb_letter = get_letter_to_extract(head_df, 'L')
-
-                if light_chain_pdb_letter is None:
-                    print(f'No L chain in file')
-                else:
-
-                    chain_df = atom_df[atom_df.chain_id == light_chain_pdb_letter].reset_index(drop=True)
-                    
-                    for CDR_type, CDR_bounds in CDR_Lpos.items():
-                        
-                        CDR_df = extract_CDR(chain_df, CDR_bounds)
-                        
-                        save_CDR(CDR_df, pdb_id, CDR_type)
-
-                        CDR_save_name = CDR_FILE_PATH +'/' +pdb_id+'_'+CDR_type+'.pdb' 
-                        CDR_length = get_CDR_length(pdb_id, CDR_save_name)
-
-                        if CDR_length is None:
-                            os.remove(CDR_save_name)
-                        elif CDR_length >= MAX_CDR_LENGTH:
-                            print(f'{CDR_save_name} too long. Removing file')
-                            os.remove(CDR_save_name)
+                            if CDR_length is None:
+                                os.remove(CDR_save_name)
+                            elif CDR_length >= MAX_CDR_LENGTH:
+                                print(f'{CDR_save_name} too long. Removing file')
+                                os.remove(CDR_save_name)
             else:
                 print(f"{ELEMENT_TO_CHECK} is not in the DataFrame.")
                 os.remove(CHOTHIA_PDB_FILE_PATH + '/' + file)
