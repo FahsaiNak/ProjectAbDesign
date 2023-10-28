@@ -1,3 +1,4 @@
+import sys
 import argparse
 import pandas as pd
 import os
@@ -25,8 +26,13 @@ def main():
     file = args.file
     pdbid = file.split("/")[-1].split(".")[0]
     datadir = "/".join(file.split("/")[:-1])
+    print(file, os.listdir(datadir))
+    if os.path.isfile(file) == False:
+        sys.exit(1)
     df = pd.read_pickle(file)
     full_struct = stut.get_structurefrompdb(pdbid)
+    if full_struct == None:
+        sys.exit(1)
     sr.compute(full_struct[0], level="R")
     crop_struc = full_struct.copy()
     for i, abres in enumerate(df):
@@ -55,7 +61,6 @@ def main():
     result_df.drop_duplicates(subset=["ablike_seq", "aglike_seq"], inplace=True)
     result_df.reset_index(drop=True, inplace=True)
     result_df[["pdb_id", "ablike", "aglike"]].to_pickle(os.path.join(datadir, pdbid+".AbAg.pkl"))
-    os.remove(file)
 
 
 if __name__ == '__main__':

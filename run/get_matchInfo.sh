@@ -1,11 +1,11 @@
 #!/bin/bash
 #set -e # stop on error
-#set -u # raise error if variable is unset
-#set -o pipefail # fail if any prior step failed
+set -u # raise error if variable is unset
+set -o pipefail # fail if any prior step failed
 
 get_info() {
     pdb=$(echo $1| cut -d "/" -f4| cut -d "." -f1)
-    find ../Datasets/Ablike_top50_old -name "*.match" | parallel grep -H ${pdb} > ${pdb}.match.tmp
+    find ../Datasets/Ablike_top50 -name "*.match" | parallel grep -H ${pdb} > ${pdb}.match.tmp
     if [ -s ${pdb}.match.tmp ]; then
         cat ${pdb}.match.tmp | cut -d":" -f1| sort -u > ${pdb}.cdr.tmp
         cat ${pdb}.match.tmp | cut -d":" -f2 > ${pdb}.all.match.tmp
@@ -15,7 +15,8 @@ get_info() {
             ../master-v1.6/bin/master --query ../Datasets/CDR_fragments_PDS/${Name}.pdb.pds --matchIn "${frag}.${pdb}" --structOut ../Datasets/AbAg/${Name}.match.${pdb}.struct --outType match --skipRMSD
             rm ${frag}.${pdb};
         done
-        python ../src/collect_Ablike.py --pdb $pdb --data_dir ../Datasets/AbAg/;
+        python ../src/collect_Ablike.py --pdb $pdb --data_dir ../Datasets/AbAg/
+        rm -r ../Datasets/AbAg/*$pdb.struct;
     fi
     rm ${pdb}**.tmp
 }

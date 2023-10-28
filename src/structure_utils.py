@@ -36,7 +36,7 @@ def get_structurefrompdb(pdb_id):
 
 def get_structurefromfile(pdbfile):
     parser = PDBParser(QUIET=True)
-    structure = parser.get_structure(get_pdb_name(pdbfile), pdbfile)
+    structure = parser.get_structure(mut.get_pdb_name(pdbfile), pdbfile)
     return structure
 
 
