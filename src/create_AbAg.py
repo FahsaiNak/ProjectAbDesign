@@ -17,13 +17,13 @@ def get_args():
 def main():
     args = get_args()
     datadir = args.dir
-    output_df = pd.concat([pd.read_pickle(os.path.join(datadir, x)) for x in os.listdir(datadir)])
+    print()
+    files = glob(os.path.join(datadir, "*.AbAg.pkl"))
+    if len(files) == 0:
+        sys.exit(1)
+    output_df = pd.concat([pd.read_pickle(file) for file in files])
     output_df.reset_index(drop=True, inplace=True)
     output_df.to_pickle(os.path.join('/'.join(datadir.split("/")[:-1]), "AbAg.pkl"))
-    for filename in glob(os.path.join(datadir, "*.pkl")):
-        os.remove(filename)
-    os.rmdir(datadir)
-
 
 if __name__ == '__main__':
     main()
