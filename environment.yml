@@ -7,3 +7,4 @@ dependencies:
   - biopandas
   - parallel
   - mock
+  - pycodestyle

@@ -10,8 +10,8 @@ import os
 #GLOBAL VARIABLES
 
 # file paths for loading raw pdb files and saving CDR pdb files
-CDR_FILE_PATH = '../data/all_cdr_sabdab/CDR'
-CDR_FRAGMENT_PATH = '../data/all_cdr_sabdab/fragments' 
+CDR_FILE_PATH = '../Datasets/CDR_pdb_files'
+CDR_FRAGMENT_PATH = '../Datasets/CDR_fragments' 
 
 # set the minimum fragment length according to Rangel et al.
 MIN_FRAG_LENGTH = 4
