@@ -28,8 +28,34 @@ MAX_CDR_LENGTH = 20
 ELEMENT_TO_CHECK = 'N'
 
 # file paths for loading raw pdb files and saving CDR pdb files
-CHOTHIA_PDB_FILE_PATH = '../data/pdb_chothia' 
-CDR_FILE_PATH = '../data/all_cdr_sabdab/CDR'
+CHOTHIA_PDB_FILE_PATH = '../Datasets/chothia_pdb_files' 
+CDR_FILE_PATH = '../Datasets/CDR_pdb_files'
+
+def get_letter_to_extract(head_df, query_value):
+    '''Given the head data frame from a pdb file, return the letter corresponding
+        to the chain of interest
+        ----------
+        head_df: DataFrame
+                  a data frame information on what letters are used to represent
+                  chans in the pdb file atom_df
+        query_value: str
+                     the letter corresponding to the chain we would like to extract
+        Returns
+        -------
+        letter_to_extract: str
+                           the letter by which the heavy or light chain is labeled
+    '''
+
+    
+    head_df.drop_duplicates(subset=['entry'], inplace=True)
+    chain_indices = head_df["entry"].str.find(query_value+'CHAIN=')+len(query_value+'CHAIN=')
+    first_index = (chain_indices > len(query_value+'CHAIN=')).idxmax()
+    if first_index == 0:
+        return None
+    first_value = chain_indices[first_index]
+    letter_to_extract = head_df['entry'].iloc[first_index][first_value:first_value+1]
+
+    return letter_to_extract
 
 #TODO named parameters for all functions
 def extract_CDR(chain_df, CDR_bounds):
@@ -69,33 +95,6 @@ def extract_CDR(chain_df, CDR_bounds):
     CDR_df = chain_df.iloc[start_residue_atom_idx:end_residue_atom_idx+1].reset_index(drop=True)
     return CDR_df
 
-#take in head df and a query_value ()
-def get_letter_to_extract(head_df, query_value):
-    '''Given the head data frame from a pdb file, return the letter corresponding
-        to the chain of interest
-        ----------
-        head_df: DataFrame
-                  a data frame information on what letters are used to represent
-                  chans in the pdb file atom_df
-        query_value: str
-                     the letter corresponding to the chain we would like to extract
-        Returns
-        -------
-        letter_to_extract: str
-                           the letter by which the heavy or light chain is labeled
-    '''
-
-    
-    head_df.drop_duplicates(subset=['entry'], inplace=True)
-    chain_indices = head_df["entry"].str.find(query_value+'CHAIN=')+len(query_value+'CHAIN=')
-    first_index = (chain_indices > len(query_value+'CHAIN=')).idxmax()
-    if first_index == 0:
-        return None
-    first_value = chain_indices[first_index]
-    letter_to_extract = head_df['entry'].iloc[first_index][first_value:first_value+1]
-
-    return letter_to_extract
-
 def get_CDR_length(pdb_id, CDR_save_name):
     '''Returns the number of residues contained within a pdb file of a CDR
         ----------
@@ -108,8 +107,6 @@ def get_CDR_length(pdb_id, CDR_save_name):
         CDR_length: int
                     the length of the CDR
     '''
-
-    #TODO is pdb_id necessary?
     parser = PDBParser(QUIET=True)
     try:
         structure = parser.get_structure(pdb_id, CDR_save_name)
@@ -155,52 +152,49 @@ def main():
 
     files = os.listdir(CHOTHIA_PDB_FILE_PATH)
 
-    batch_start = 0
-    batch_end = 1
     for index, file in enumerate (files):
-        if index<batch_end and index >= batch_start:
+        
+        pdb_id = file[-8:-4]
+        print('Index:', index, pdb_id)
+        pdb_df = PandasPdb().read_pdb(CHOTHIA_PDB_FILE_PATH +'/' + file) 
+        
+        head_df = pdb_df.df['OTHERS']
+        atom_df = pdb_df.df ['ATOM']
+        
+        atom_name_series = atom_df['atom_name']
 
-            pdb_id = file[-8:-4]
-            print('Index:', index, pdb_id)
-            pdb_df = PandasPdb().read_pdb(CHOTHIA_PDB_FILE_PATH +'/' + file) 
-            
-            head_df = pdb_df.df['OTHERS']
-            atom_df = pdb_df.df ['ATOM']
-            
-            atom_name_series = atom_df['atom_name']
+        #removes pdb files that do not contain full atom list
+        #by checking for presence of nitrogen atom
+        #assumes that if N is present then it's full chain
+        if ELEMENT_TO_CHECK in atom_name_series.values:
 
-            #removes pdb files that do not contain full atom list
-            #by checking for presence of nitrogen atom
-            #assumes that if N is present then it's full chain
-            if ELEMENT_TO_CHECK in atom_name_series.values:
+            for chain_letter in CHAIN_LETTERS:
 
-                for chain_letter in CHAIN_LETTERS:
+                chain_pdb_letter = get_letter_to_extract(head_df, chain_letter)
 
-                    chain_pdb_letter = get_letter_to_extract(head_df, chain_letter)
+                if chain_pdb_letter is None:
+                    print(f'No H chain in file')
+                else:
 
-                    if chain_pdb_letter is None:
-                        print(f'No H chain in file')
-                    else:
-
-                        chain_df = atom_df[atom_df.chain_id == chain_pdb_letter].reset_index(drop=True)
+                    chain_df = atom_df[atom_df.chain_id == chain_pdb_letter].reset_index(drop=True)
+                    
+                    for CDR_type, CDR_bounds in CDR_Hpos.items():
                         
-                        for CDR_type, CDR_bounds in CDR_Hpos.items():
-                            
-                            CDR_df = extract_CDR(chain_df, CDR_bounds)
-                            
-                            save_CDR(CDR_df, pdb_id, CDR_type)
+                        CDR_df = extract_CDR(chain_df, CDR_bounds)
+                        
+                        save_CDR(CDR_df, pdb_id, CDR_type)
 
-                            CDR_save_name = CDR_FILE_PATH +'/' +pdb_id+'_'+CDR_type+'.pdb' 
-                            CDR_length = get_CDR_length(pdb_id, CDR_save_name)
+                        CDR_save_name = CDR_FILE_PATH +'/' +pdb_id+'_'+CDR_type+'.pdb' 
+                        CDR_length = get_CDR_length(pdb_id, CDR_save_name)
 
-                            if CDR_length is None:
-                                os.remove(CDR_save_name)
-                            elif CDR_length >= MAX_CDR_LENGTH:
-                                print(f'{CDR_save_name} too long. Removing file')
-                                os.remove(CDR_save_name)
-            else:
-                print(f"{ELEMENT_TO_CHECK} is not in the DataFrame.")
-                os.remove(CHOTHIA_PDB_FILE_PATH + '/' + file)
+                        if CDR_length is None:
+                            os.remove(CDR_save_name)
+                        elif CDR_length >= MAX_CDR_LENGTH:
+                            print(f'{CDR_save_name} too long. Removing file')
+                            os.remove(CDR_save_name)
+        else:
+            print(f"{ELEMENT_TO_CHECK} is not in the DataFrame.")
+            os.remove(CHOTHIA_PDB_FILE_PATH + '/' + file)
         print('----------------------------------------------')
 
 if __name__ == '__main__':
