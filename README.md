@@ -33,25 +33,25 @@ Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like re
 3. CDR-like region identification
   - Remain in run directory
   - Run Prep_queries_AbAg.sh and Prep_targets_AbAg.sh to convert fragmented-CDRs (queries) and cleaned-PDB90 proteins (targets) in PDB to PDS that is readable for Master program.
-   ```sh
-   ./Prep_queries_AbAg.sh
-   ./Prep_targets_AbAg.sh
-   ```
+    ```sh
+    ./Prep_queries_AbAg.sh
+    ./Prep_targets_AbAg.sh
+    ```
   - Run Ablike.sh search for antigen(CDR)-like regions in every target proteins (PDB90 proteins)
-   ```sh
-   ./Ablike.sh
-   ```
+    ```sh
+    ./Ablike.sh
+    ```
   - Run get_matchInfo.sh to collect antigen(CDR)-like structure information from the Master match files.
-   ```sh
-   ./get_matchInfo.sh
-   ```
+    ```sh
+    ./get_matchInfo.sh
+    ```
 
 4. Antigen-like region identification and AbAg database generation
   - Remain in run directory
   - Run Aglike.sh to search for contacting/interacting residues of each antigen(CDR)-like region in the same protein. Then, all the antibody-antigen-like information from each PDB90 proteins is combined into a compressed file named AbAb.pkl
-   ```sh
-   ./Aglike.sh
-   ```
+    ```sh
+    ./Aglike.sh
+    ```
 
 ### Step 2: Antigen epitope processing and its interacting-CDR-like searching
 
