@@ -12,7 +12,7 @@ jobs:
                 shell: bash -l {0}
         steps:
           - uses: actions/checkout@v2
-          - uses: conda-incubator/setup-miniconda@v2
+          - uses: mamba-org/setup-micromamba@v1
             with:
               activate-environment: AbDes
               environment-file: environment.yml
@@ -27,7 +27,7 @@ jobs:
                 shell: bash -l {0}
         steps:
           - uses: actions/checkout@v2
-          - uses: conda-incubator/setup-miniconda@v2
+          - uses: mamba-org/setup-micromamba@v1
             with:
               activate-environment: AbDes
               environment-file: environment.yml
@@ -42,7 +42,7 @@ jobs:
                 shell: bash -l {0}
         steps:
           - uses: actions/checkout@v2
-          - uses: conda-incubator/setup-miniconda@v2
+          - uses: mamba-org/setup-micromamba@v1
             with:
               activate-environment: AbDes
               environment-file: environment.yml
@@ -57,10 +57,41 @@ jobs:
                 shell: bash -l {0}
         steps:
           - uses: actions/checkout@v2
-          - uses: conda-incubator/setup-miniconda@v2
+          - uses: mamba-org/setup-micromamba@v1
             with:
               activate-environment: AbDes
               environment-file: environment.yml
           - run: |
              cd test/unit
              python -m test_structure_utils
+             
+    run_unittest_PDB90:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash -l {0}
+        steps:
+          - uses: actions/checkout@v2
+          - uses: mamba-org/setup-micromamba@v1
+            with:
+              activate-environment: AbDes
+              environment-file: environment.yml
+          - run: |
+             cd test/unit
+             python -m test_PDB90
+
+    run_unittest_:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash -l {0}
+        steps:
+          - uses: actions/checkout@v2
+          - uses: mamba-org/setup-micromamba@v1
+            with:
+              activate-environment: AbDes
+              environment-file: environment.yml
+          - run: |
+             cd test/unit
+             python -m test_structure_utils
+             python -m test_PDB90
