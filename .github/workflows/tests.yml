@@ -19,3 +19,15 @@ jobs:
           - run: |
              cd test/functional
              bash test_create_AbAg.sh
+    run_style_check:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash -l {0}
+        steps:
+          - uses: actions/checkout@v2
+          - uses: conda-incubator/setup-miniconda@v2
+            with:
+              activate-environment: AbDes
+              environment-file: environment.yml
+          - run: pycodestyle $(git ls-files "src/*.py")             
