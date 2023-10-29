@@ -5,7 +5,7 @@ import os
 import pickle
 import pandas as pd
 sys.path.insert(0, 'src')
-import master_utils as mut
+import master_utils as mut  # noqa
 
 
 def get_args():
@@ -26,7 +26,7 @@ def main():
     args = get_args()
     pdbid = args.pdb
     datadir = args.data_dir
-    collection = {"ab_pos1":[], "ab_pos2":[], "ab_all":[]}
+    collection = {"ab_pos1": [], "ab_pos2": [], "ab_all": []}
     if len(glob(os.path.join(datadir, "*."+pdbid+".struct"))) == 0:
         sys.exit(1)
     for dir_path in glob(os.path.join(datadir, "*."+pdbid+".struct")):
@@ -38,12 +38,13 @@ def main():
             for k, v in zip(collection.keys(), info_lst):
                 collection[k].append(v)
     df = pd.DataFrame(collection)
-    df.sort_values(by=["ab_pos1", "ab_pos2", "ab_all"], ascending=[True,False,False], inplace=True)
+    df.sort_values(by=["ab_pos1", "ab_pos2", "ab_all"],
+                   ascending=[True, False, False], inplace=True)
     df.drop_duplicates(subset=["ab_pos1", "ab_pos2", "ab_all"], inplace=True)
     df.drop_duplicates(subset=["ab_pos1"], inplace=True)
     df.drop_duplicates(subset=["ab_pos2"], inplace=True)
     df.reset_index(drop=True, inplace=True)
-    df["ab_all"].to_pickle(os.path.join(datadir,pdbid+".pkl"))
+    df["ab_all"].to_pickle(os.path.join(datadir, pdbid+".pkl"))
 
 
 if __name__ == '__main__':
