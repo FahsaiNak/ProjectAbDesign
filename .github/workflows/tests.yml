@@ -65,7 +65,7 @@ jobs:
              cd test/unit
              python -m test_structure_utils
              
-    run_unittest_:
+    run_unittest_PDB90:
         runs-on: ubuntu-latest
         defaults:
             run:
@@ -80,7 +80,6 @@ jobs:
              cd test/unit
              python -m test_PDB90
 
-             
     run_unittest_:
         runs-on: ubuntu-latest
         defaults:
