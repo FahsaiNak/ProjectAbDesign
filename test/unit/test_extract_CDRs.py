@@ -1,11 +1,8 @@
 import unittest
-import random
 import sys
 sys.path.insert(0, '../../src')  # noqa
 import extract_CDRs_from_PDB
-import pandas as pd
 from biopandas.pdb import PandasPdb
-from Bio.PDB import PDBParser
 
 
 class TestExtractCDR(unittest.TestCase):
@@ -26,7 +23,7 @@ class TestExtractCDR(unittest.TestCase):
 
         chain = 'P'
         letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(self.pdb_df.df['OTHERS'], chain)
-        self.assertEqual(letter_to_extract, None)
+        self.assertIsNone(letter_to_extract)
 
     def test_extract_CDR(self):
     
@@ -42,26 +39,26 @@ class TestExtractCDR(unittest.TestCase):
 
         CDR_bounds = [3,900]
         CDR = extract_CDRs_from_PDB.extract_CDR(chain_df, CDR_bounds)
-        self.assertEqual(CDR,None)
+        self.assertIsNone(CDR)
 
-
-        
-    #     self.assertEqual(get_synchro_data.get_data(self.path_to_data + '/' +self.empty_file_name), [])
-    #     self.assertRaises(FileNotFoundError, get_synchro_data.get_data,
-    #                       self.path_to_data + '/' +self.dne_file_name)
     
-    # def test_get_query_lines(self):
+    def test_get_CDR_length(self):
         
-    #     country = 'Albania'
-    #     num_lines = len(get_synchro_data.get_data(self.path_to_data + '/' + self.fire_file_name,
-    #                                                query_value=country,
-    #                                                query_col=0))
-    #     num_lines = len(get_synchro_data.get_data(self.path_to_data + '/' + self.gdp_file_name))
-    #     self.assertEqual(199, num_lines)
-                        
-    #     num_lines = len(get_synchro_data.get_data(self.path_to_data + '/' + self.empty_file_name))
-    #     self.assertEqual(0, num_lines)
-        
+        length = extract_CDRs_from_PDB.get_CDR_length(self.pdb_id,
+                                                      self.CDR_pdb_path + self.pdb_id + '_H1.pdb')
+
+        actual_length = 32-26 + 1 + 4
+        self.assertEqual(length,actual_length)
+
+        length = extract_CDRs_from_PDB.get_CDR_length('bubba',
+                                                      self.CDR_pdb_path + self.pdb_id + '_H1.pdb')
+
+        self.assertEqual(length,actual_length)
+
+        length = extract_CDRs_from_PDB.get_CDR_length('bubba',
+                                                      self.CDR_pdb_path + self.pdb_id + '.pdb')
+
+        self.assertIsNone(length)        
 
 if __name__ == '__main__':
     unittest.main()
