@@ -5,6 +5,21 @@ on:
     pull_request:
         branches: [ main ]
 jobs:
+    run_style_check:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash -l {0}
+        steps:
+          - uses: actions/checkout@v2
+          - uses: conda-incubator/setup-miniconda@v2
+            with:
+              activate-environment: AbDes
+              environment-file: environment.yml
+          - run: |
+              pycodestyle $(git ls-files "src/*.py")
+              pycodestyle $(git ls-files "test/unit/*.py")
+
     run_functional_create_AbAg:
         runs-on: ubuntu-latest
         defaults:
@@ -19,7 +34,8 @@ jobs:
           - run: |
              cd test/functional
              bash test_create_AbAg.sh
-    run_style_check:
+
+    run_unittest_master_utils:
         runs-on: ubuntu-latest
         defaults:
             run:
@@ -30,4 +46,21 @@ jobs:
             with:
               activate-environment: AbDes
               environment-file: environment.yml
-          - run: pycodestyle $(git ls-files "src/*.py")             
+          - run: |
+             cd test/unit
+             python -m test_master_utils
+
+    run_unittest_structure_utils:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash -l {0}
+        steps:
+          - uses: actions/checkout@v2
+          - uses: conda-incubator/setup-miniconda@v2
+            with:
+              activate-environment: AbDes
+              environment-file: environment.yml
+          - run: |
+             cd test/unit
+             python -m test_structure_utils
