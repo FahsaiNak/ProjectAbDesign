@@ -12,13 +12,14 @@ def find_max_index(residue_insertion_list, end_residue):
 
 def get_residue_list_fromDF(atom_df):
     residue_str_list = [str(x) for x in atom_df['residue_number']]
-    residue_insertion_list = [a + b for a, b in zip(residue_str_list, atom_df['insertion'])]
+    residue_insertion_list = [a + b for a, b in zip(residue_str_list,
+                                                    atom_df['insertion'])]
     return residue_insertion_list
 
 
 def get_residue_set_fromList(residue_insertion_list):
     residue_insertion_list_set = []
-    [residue_insertion_list_set.append(x) for x in residue_insertion_list if x not in residue_insertion_list_set]
+    [residue_insertion_list_set.append(x) for x in residue_insertion_list if x not in residue_insertion_list_set]  # noqa
     return residue_insertion_list_set
 
 

@@ -8,7 +8,7 @@ def checkDir(dir_path):
 
 
 def dropDup(x):
-  return list(dict.fromkeys(x))
+    return list(dict.fromkeys(x))
 
 
 def get_list_contains_str(lst, string):
@@ -17,9 +17,9 @@ def get_list_contains_str(lst, string):
 
 def call_d3to1():
     d3to1 = {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
-            'ILE': 'I', 'PRO': 'P', 'THR': 'T', 'PHE': 'F', 'ASN': 'N',
-            'GLY': 'G', 'HIS': 'H', 'LEU': 'L', 'ARG': 'R', 'TRP': 'W',
-            'ALA': 'A', 'VAL': 'V', 'GLU': 'E', 'TYR': 'Y', 'MET': 'M'}
+             'ILE': 'I', 'PRO': 'P', 'THR': 'T', 'PHE': 'F', 'ASN': 'N',
+             'GLY': 'G', 'HIS': 'H', 'LEU': 'L', 'ARG': 'R', 'TRP': 'W',
+             'ALA': 'A', 'VAL': 'V', 'GLU': 'E', 'TYR': 'Y', 'MET': 'M'}
     return d3to1
 
 

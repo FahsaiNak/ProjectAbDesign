@@ -18,20 +18,20 @@ def get_args():
     args = parser.parse_args()
     return args
 
+
 def main():
-    result_dict = {"pdb_id":[], "ablike":[], "ablike_seq":[], 
-                   "aglike":[], "aglike_seq":[]}
+    result_dict = {"pdb_id": [], "ablike": [], "ablike_seq": [],
+                   "aglike": [], "aglike_seq": []}
     sr = ShrakeRupley()
     args = get_args()
     file = args.file
     pdbid = file.split("/")[-1].split(".")[0]
     datadir = "/".join(file.split("/")[:-1])
-    print(file, os.listdir(datadir))
-    if os.path.isfile(file) == False:
+    if os.path.isfile(file) is False:
         sys.exit(1)
     df = pd.read_pickle(file)
     full_struct = stut.get_structurefrompdb(pdbid)
-    if full_struct == None:
+    if full_struct is None:
         sys.exit(1)
     sr.compute(full_struct[0], level="R")
     crop_struc = full_struct.copy()
@@ -43,7 +43,8 @@ def main():
         abres_seq = ut.get_d3to1([_.split("|")[2] for _ in abres_list])
         crop_struc = full_struct.copy()
         for ab_chain, ab_no in zip(abres_chain, abres_no):
-            crop_struc[0][ab_chain].detach_child(full_struct[0][abres_chain][ab_no].id)
+            res_id = full_struct[0][ab_chain][ab_no].id
+            crop_struc[0][ab_chain].detach_child(res_id)
         sr.compute(crop_struc[0], level="R")
         sasa_res_out = stut.find_SASAcontact(full_struct, crop_struc)
         sasa_res_list.extend([_ for _ in sasa_res_out if _ not in abres_list])
@@ -58,9 +59,11 @@ def main():
             result_dict["aglike"].append(agres)
             result_dict["aglike_seq"].append(agres_seq)
     result_df = pd.DataFrame(result_dict)
-    result_df.drop_duplicates(subset=["ablike_seq", "aglike_seq"], inplace=True)
+    result_df.drop_duplicates(subset=["ablike_seq", "aglike_seq"],
+                              inplace=True)
     result_df.reset_index(drop=True, inplace=True)
-    result_df[["pdb_id", "ablike", "aglike"]].to_pickle(os.path.join(datadir, pdbid+".AbAg.pkl"))
+    result_df[["pdb_id", "ablike", "aglike"]].to_pickle(
+        os.path.join(datadir, pdbid+".AbAg.pkl"))
 
 
 if __name__ == '__main__':
