@@ -43,7 +43,7 @@ def main():
         abres_seq = ut.get_d3to1([_.split("|")[2] for _ in abres_list])
         crop_struc = full_struct.copy()
         for ab_chain, ab_no in zip(abres_chain, abres_no):
-            crop_struc[0][ab_chain].detach_child((' ', ab_no, ' '))
+            crop_struc[0][ab_chain].detach_child(full_struct[0][abres_chain][ab_no].id)
         sr.compute(crop_struc[0], level="R")
         sasa_res_out = stut.find_SASAcontact(full_struct, crop_struc)
         sasa_res_list.extend([_ for _ in sasa_res_out if _ not in abres_list])

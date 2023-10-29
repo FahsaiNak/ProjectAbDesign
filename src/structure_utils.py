@@ -1,5 +1,5 @@
 import os
-from Bio.PDB import PDBParser, PDBList, ShrakeRupley
+from Bio.PDB import PDBParser, PDBList
 import master_utils as mut
 import processing_utils as ut
 
@@ -40,7 +40,7 @@ def get_structurefrompdb(pdb_id):
     pdb_list = PDBList()
     parser = PDBParser(QUIET=True)
     try:
-        pdb_list.retrieve_pdb_file(pdb_id, pdir='.', file_format='pdb')
+        pdb_list.download_pdb_files([pdb_id], pdir='.', file_format='pdb')
         structure = parser.get_structure(pdb_id, "pdb"+pdb_id+".ent")
     except FileNotFoundError:
         return None
@@ -50,7 +50,10 @@ def get_structurefrompdb(pdb_id):
 
 def get_structurefromfile(pdbfile):
     parser = PDBParser(QUIET=True)
-    structure = parser.get_structure(mut.get_pdb_name(pdbfile), pdbfile)
+    try:
+        structure = parser.get_structure(mut.get_pdb_name(pdbfile), pdbfile)
+    except FileNotFoundError:
+        return None
     return structure
 
 
