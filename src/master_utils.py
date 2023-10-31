@@ -1,3 +1,4 @@
+import sys
 from Bio.PDB import PDBParser
 sys.path.insert(0, 'src')
 import processing_utils as ut   # noqa

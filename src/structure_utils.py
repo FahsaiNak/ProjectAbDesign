@@ -1,3 +1,4 @@
+import sys
 import os
 from Bio.PDB import PDBParser, PDBList
 sys.path.insert(0, 'src')
