@@ -1,0 +1,9 @@
+## Path Configurations
+MASTER: "../master-v1.6/bin/createPDS"
+PDB90: "../Datasets/all_PDB"
+PDS90: "../Datasets/PDB90_PDS"
+PDBCDRfrag: "../Datasets/CDR_fragments"
+PDSCDRfrag: "../Datasets/CDR_fragments_PDS"
+
+## Number of Cores used
+core: 2
