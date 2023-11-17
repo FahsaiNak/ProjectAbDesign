@@ -3,6 +3,23 @@
 set -u # raise error if variable is unset
 set -o pipefail # fail if any prior step failed
 
+parse_yaml() {
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s=\"%s\"\n", vn, $2, $3);
+      }
+   }'
+}
+export -f parse_yaml
+
 get_info() {
     # Extract the PDB ID from the provided path.
     pdb=$(echo $1| cut -d "/" -f4| cut -d "." -f1)
@@ -26,17 +43,17 @@ get_info() {
             comm -12 <(sort ${pdb}.all.match.tmp) <(sort $frag) > ${frag}.${pdb}
             
             # Run a command (assuming it's a program) using the extracted CDR fragment and PDB ID.
-            ../master-v1.6/bin/master --query ../Datasets/CDR_fragments_PDS/${Name}.pdb.pds --matchIn "${frag}.${pdb}" --structOut ../Datasets/AbAg/${Name}.match.${pdb}.struct --outType match --skipRMSD
+            $2/master --query $4/${Name}.pdb.pds --matchIn "${frag}.${pdb}" --structOut $3/${Name}.match.${pdb}.struct --outType match --skipRMSD
             
             # Remove the temporary file.
             rm ${frag}.${pdb};
         done
         
         # Run a Python script to collect Ab-like information based on the PDB ID.
-        python ../src/collect_Ablike.py --pdb $pdb --data_dir ../Datasets/AbAg/
+        python ../src/collect_Ablike.py --pdb $pdb --data_dir $3
         
         # Remove temporary structure files.
-        rm -r ../Datasets/AbAg/*$pdb.struct;
+        rm -r $3/**$pdb.struct;
     fi
     
     # Remove all temporary files related to the PDB ID.
@@ -44,15 +61,16 @@ get_info() {
 }
 export -f get_info
 
+eval $(parse_yaml config.yaml)
 # Find all PDB90 files with a specific extension and store in a temporary file.
-find  ../Datasets/PDB90_PDS -type file -name "*.pdb.pds" > PDB90.pds.tmp
+find $PDS90 -type file -name "*.pdb.pds" > PDB90.pds.tmp
 
 # Create the AbAg directory if it doesn't exist.
-[ ! -d ../Datasets/AbAg ] && mkdir ../Datasets/AbAg
+[ ! -d $AbAg ] && mkdir $AbAg
 
 # Parallelize the process to get Ab-like information for multiple PDB files.
 echo "getting Ab-like info"
-parallel -j 2 -a PDB90.pds.tmp get_info
+parallel -j $core get_info :::: PDB90.pds.tmp ::: $MASTER ::: $AbAg ::: $PDSCDRfrag
 
 # Remove the temporary file containing PDB90 files.
 rm PDB90.pds.tmp
