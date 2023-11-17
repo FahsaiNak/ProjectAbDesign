@@ -22,7 +22,7 @@ export -f parse_yaml
 
 prepTargets() {
    pdb=$(echo $1| cut -d "/" -f4)
-	$2 --type target --pdb $1 --pds $3/$pdb.pds
+	$2/createPDS --type target --pdb $1 --pds $3/$pdb.pds
 }
 export -f prepTargets
 
