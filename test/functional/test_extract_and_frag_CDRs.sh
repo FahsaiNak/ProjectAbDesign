@@ -15,3 +15,4 @@ run basic_extract python ../../src/fragment_CDRs.py
 assert_in_stdout 0
 assert_exit_code 0
 assert_equal $fragment_file_to_create $( ls $fragment_file_to_create )
+rm ../Datasets/CDR_fragments/*.pdb

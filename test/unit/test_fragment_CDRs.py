@@ -7,23 +7,17 @@ from biopandas.pdb import PandasPdb
 
 class TestExtractCDR(unittest.TestCase):
 
-    # def setUp(self):
-
-    #     # TODO put into try catch
-    #     with open('test_config.yaml', 'r') as yaml_file:
-    #         config_data = yaml.safe_load(yaml_file)
-
     def test_get_CDR_frag_dict(self):
-        
+
         fragment_dict = fragment_CDRs.get_CDR_frag_dict()
         actual_frag_seq = 'SQGV'
         self.assertEqual(actual_frag_seq, fragment_dict['sequence'][0])
 
-    def test_get_config_data(self):
+    def test_slide_window(self):
 
-        dirs = fragment_CDRs.get_config_data(path_to_yaml = '../../run/config.yaml')
-        self.assertIsNotNone(dirs)
+        frag_dict = fragment_CDRs.slide_window('1f58_H1.pdb')
+        self.assertEqual(frag_dict['sequence'][0], 'SQGV')
 
-    
+
 if __name__ == '__main__':
     unittest.main()

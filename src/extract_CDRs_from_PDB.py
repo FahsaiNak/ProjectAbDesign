@@ -3,8 +3,15 @@ from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser
 import processing_utils
 import os
+import yaml
 
 # GLOBAL VARIABLES
+
+# set paths
+with open('../run/config.yaml', 'r') as yaml_file:
+    config_data = yaml.safe_load(yaml_file)
+CDR_FILE_PATH = config_data["PDBCDRs"]
+CHOTHIA_PDB_FILE_PATH = config_data["PDB_Ab_Chothia"]
 
 #  3 and 1 letter amino acid codes
 d3to1 = {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
@@ -26,6 +33,9 @@ MAX_CDR_LENGTH = 20
 #  check to make sure Nitrogen is in atom list in pdb files
 #  otherwise the files are incomplete
 ELEMENT_TO_CHECK = 'N'
+
+# pdb id char num
+PDB_ID_CHAR = 4
 
 
 def get_letter_to_extract(head_df, query_value):
@@ -153,18 +163,7 @@ def save_CDR(CDR_df, pdb_id, CDR_type):
                        append_newline=True)
 
 
-def get_config_data(path_to_yaml = ''):
-
-    # TODO put into try catch
-    with open(path_to_yaml, 'r') as yaml_file:
-        config_data = yaml.safe_load(yaml_file)
-    return config_data
-
 def main():
-
-    config_data = get_config_data('../run/config.yaml')
-    CDR_FILE_PATH = config_data["PDBCDRs"]
-    CHOTHIA_PDB_FILE_PATH = config_data["PDB_Ab_Chothia"]
 
     processing_utils.checkDir(CHOTHIA_PDB_FILE_PATH)
     processing_utils.checkDir(CDR_FILE_PATH)
@@ -173,7 +172,7 @@ def main():
 
     for index, file in enumerate(files):
 
-        pdb_id = file[-8:-4]
+        pdb_id = file[-8:-PDB_ID_CHAR]
         print('Index:', index, pdb_id)
         pdb_df = PandasPdb().read_pdb(CHOTHIA_PDB_FILE_PATH + '/' + file)
 
