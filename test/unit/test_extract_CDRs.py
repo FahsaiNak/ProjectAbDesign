@@ -12,55 +12,60 @@ class TestExtractCDR(unittest.TestCase):
         self.CDR_pdb_path = '../Datasets/CDR_pdb_files/'
         self.pdb_id = '1f58'
         self.chothia_full_path = self.chothia_pdb_path + self.pdb_id + '.pdb'
-        self.pdb_df = PandasPdb().read_pdb(self.chothia_full_path) 
+        self.pdb_df = PandasPdb().read_pdb(self.chothia_full_path)
 
-        
     def test_get_letter_to_extract(self):
-        
+
         chain = 'H'
-        letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(self.pdb_df.df['OTHERS'], chain)
+        letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(
+            self.pdb_df.df['OTHERS'], chain)
         self.assertEqual(letter_to_extract, 'H')
 
         chain = 'P'
-        letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(self.pdb_df.df['OTHERS'], chain)
+        letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(
+            self.pdb_df.df['OTHERS'], chain)
         self.assertIsNone(letter_to_extract)
 
     def test_extract_CDR(self):
-    
+
         chain_pdb_letter = 'H'
         atom_df = self.pdb_df.df['ATOM']
-        CDR_bounds = [3,7]
-        chain_df = atom_df[atom_df.chain_id == chain_pdb_letter].reset_index(drop=True)
+        CDR_bounds = [3, 7]
+        chain_df = atom_df[atom_df.chain_id ==
+                           chain_pdb_letter].reset_index(drop=True)
 
         actual_length = 151-111+1
         CDR = extract_CDRs_from_PDB.extract_CDR(chain_df, CDR_bounds)
-        self.assertEqual(len(CDR),actual_length)
+        self.assertEqual(len(CDR), actual_length)
 
-
-        CDR_bounds = [3,900]
+        CDR_bounds = [3, 900]
         CDR = extract_CDRs_from_PDB.extract_CDR(chain_df, CDR_bounds)
         self.assertIsNone(CDR)
 
-    
     def test_get_CDR_length(self):
-        
+
         length = extract_CDRs_from_PDB.get_CDR_length(self.pdb_id,
-                                                      self.CDR_pdb_path + self.pdb_id + '_H1.pdb')
+                                                      self.CDR_pdb_path +
+                                                      self.pdb_id +
+                                                      '_H1.pdb')
 
         actual_length = 32-26 + 1 + 4
-        self.assertEqual(length,actual_length)
+        self.assertEqual(length, actual_length)
 
         length = extract_CDRs_from_PDB.get_CDR_length('bubba',
-                                                      self.CDR_pdb_path + self.pdb_id + '_H1.pdb')
+                                                      self.CDR_pdb_path +
+                                                      self.pdb_id +
+                                                      '_H1.pdb')
 
-        self.assertEqual(length,actual_length)
+        self.assertEqual(length, actual_length)
 
         length = extract_CDRs_from_PDB.get_CDR_length('bubba',
-                                                      self.CDR_pdb_path + self.pdb_id + '.pdb')
+                                                      self.CDR_pdb_path +
+                                                      self.pdb_id +
+                                                      '.pdb')
 
-        self.assertIsNone(length)        
+        self.assertIsNone(length)
+
 
 if __name__ == '__main__':
     unittest.main()
-
-        

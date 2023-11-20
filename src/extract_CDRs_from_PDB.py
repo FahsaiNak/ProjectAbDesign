@@ -3,8 +3,15 @@ from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser
 import processing_utils
 import os
+import yaml
 
 # GLOBAL VARIABLES
+
+# set paths
+with open('../run/config.yaml', 'r') as yaml_file:
+    config_data = yaml.safe_load(yaml_file)
+CDR_FILE_PATH = config_data["PDBCDRs"]
+CHOTHIA_PDB_FILE_PATH = config_data["PDB_Ab_Chothia"]
 
 #  3 and 1 letter amino acid codes
 d3to1 = {'CYS': 'C', 'ASP': 'D', 'SER': 'S', 'GLN': 'Q', 'LYS': 'K',
@@ -27,9 +34,8 @@ MAX_CDR_LENGTH = 20
 #  otherwise the files are incomplete
 ELEMENT_TO_CHECK = 'N'
 
-# file paths for loading raw pdb files and saving CDR pdb files
-CHOTHIA_PDB_FILE_PATH = '../Datasets/chothia_pdb_files'
-CDR_FILE_PATH = '../Datasets/CDR_pdb_files'
+# pdb id char num
+PDB_ID_CHAR = 4
 
 
 def get_letter_to_extract(head_df, query_value):
@@ -166,7 +172,7 @@ def main():
 
     for index, file in enumerate(files):
 
-        pdb_id = file[-8:-4]
+        pdb_id = file[-8:-PDB_ID_CHAR]
         print('Index:', index, pdb_id)
         pdb_df = PandasPdb().read_pdb(CHOTHIA_PDB_FILE_PATH + '/' + file)
 
