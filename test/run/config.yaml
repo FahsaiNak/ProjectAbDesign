@@ -1,0 +1,9 @@
+## Path Configurations
+PDBCDRfrag: "../Datasets/CDR_fragments"
+PDBCDRs: "../Datasets/CDR_pdb_files"
+PDB_Ab_Chothia: '../Datasets/chothia_pdb_files'
+## Number of Cores used
+core: 2
+## Global Parameters
+maxcutoff: 1.00
+topselect: 50
