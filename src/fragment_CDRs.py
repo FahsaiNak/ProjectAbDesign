@@ -6,6 +6,7 @@ from Bio.PDB import PDBParser, PDBList
 import processing_utils as ut
 import structure_utils as frut
 import os
+import yaml
 
 #GLOBAL VARIABLES
 
@@ -77,8 +78,16 @@ def get_CDR_frag_dict():
                 continue
     return fragment_dict
 
+def get_config_data(path_to_yaml = ''):
 
+    # TODO put into try catch
+    with open(path_to_yaml, 'r') as yaml_file:
+        config_data = yaml.safe_load(yaml_file)
+    return config_data
+    
 def main():
+
+    config_data = get_config_data('../run/config.yaml')
 
     fragment_dict = get_CDR_frag_dict()
     result_df = pd.DataFrame(fragment_dict)

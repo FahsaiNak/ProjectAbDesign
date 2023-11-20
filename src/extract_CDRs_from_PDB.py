@@ -27,10 +27,6 @@ MAX_CDR_LENGTH = 20
 #  otherwise the files are incomplete
 ELEMENT_TO_CHECK = 'N'
 
-# file paths for loading raw pdb files and saving CDR pdb files
-CHOTHIA_PDB_FILE_PATH = '../Datasets/chothia_pdb_files'
-CDR_FILE_PATH = '../Datasets/CDR_pdb_files'
-
 
 def get_letter_to_extract(head_df, query_value):
     '''Given the head data frame from a pdb file,
@@ -157,7 +153,18 @@ def save_CDR(CDR_df, pdb_id, CDR_type):
                        append_newline=True)
 
 
+def get_config_data(path_to_yaml = ''):
+
+    # TODO put into try catch
+    with open(path_to_yaml, 'r') as yaml_file:
+        config_data = yaml.safe_load(yaml_file)
+    return config_data
+
 def main():
+
+    config_data = get_config_data('../run/config.yaml')
+    CDR_FILE_PATH = config_data["PDBCDRs"]
+    CHOTHIA_PDB_FILE_PATH = config_data["PDB_Ab_Chothia"]
 
     processing_utils.checkDir(CHOTHIA_PDB_FILE_PATH)
     processing_utils.checkDir(CDR_FILE_PATH)
