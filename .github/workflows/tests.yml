@@ -124,4 +124,4 @@ jobs:
             environment-file: environment.yml
         - run: |
             cd test/functional
-            bash test_extract_frag_CDRs.sh
+            bash test_extract_and_frag_CDRs.sh
