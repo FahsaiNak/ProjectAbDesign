@@ -29,6 +29,15 @@ Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like re
 1. PDB90 database
 
 2. CDR database and fragmented-CDR datasets
+- Navigate to [SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/search/?all=true#downloads)
+- Click on Downloads on the left hand side of the page
+- Click on Download an archived zip file to download structures
+- Once the zip file is downloaded, extract the chothia zip file and save it into the Datasets directory in the local repository
+- Change directory to the run directory
+- On the command line run:
+  ```sh
+  bash CDR_fragment_database.sh
+  ```
 
 3. CDR-like region identification
   - Remain in run directory
