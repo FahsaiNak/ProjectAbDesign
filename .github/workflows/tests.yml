@@ -95,3 +95,33 @@ jobs:
              cd test/unit
              python -m test_structure_utils
              python -m test_PDB90
+
+    run_unit_test_extract_frag_CDR:
+      runs-on: ubuntu-latest
+      defaults:
+          run:
+              shell: bash -l {0}
+      steps:
+        - uses: actions/checkout@v2
+        - uses: mamba-org/setup-micromamba@v1
+          with:
+            activate-environment: AbDes
+            environment-file: environment.yml
+        - run: |
+            cd test/unit
+            python test_extract_CDRs.py
+            python test_fragment_CDRs.py
+    run_functional_extract_frag_CDR:
+      runs-on: ubuntu-latest
+      defaults:
+          run:
+              shell: bash -l {0}
+      steps:
+        - uses: actions/checkout@v2
+        - uses: mamba-org/setup-micromamba@v1
+          with:
+            activate-environment: AbDes
+            environment-file: environment.yml
+        - run: |
+            cd test/functional
+            bash test_extract_and_frag_CDRs.sh

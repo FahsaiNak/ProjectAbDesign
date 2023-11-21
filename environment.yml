@@ -8,3 +8,4 @@ dependencies:
   - parallel
   - mock
   - pycodestyle
+  - pyyaml
