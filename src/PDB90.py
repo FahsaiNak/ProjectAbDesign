@@ -1,9 +1,62 @@
+"""
+This script is used for downloading, renaming,
+and cleaning protein data bank (PDB) files.
+
+Modules and Packages:
+- os: Provides functions for interacting with the operating system.
+- time: Provides various time-related functions.
+- glob: Finds all the pathnames matching a specified pattern.
+- subprocess: Allows you to spawn new processes, connect to their
+input/output/error pipes, and obtain their return codes.
+- argparse: Makes it easy to write user-friendly command-line interfaces.
+- Bio.PDB: A Biopython module that focuses on working with crystal
+structures of biological macromolecules.
+
+Classes:
+- NotHetero: A class that inherits from the Select class in the Bio.PDB module.
+It is used to select only the non-hetero parts of a protein by removing
+small molecules or ions that are not a main part of the protein.
+
+Functions:
+- download_and_uncompress_files(folder, csv_file): Downloads and uncompresses
+PDB files from a given CSV file into a specified folder.
+- rename_files(directory): Renames all files in a specified directory with
+a .ent termination to .pdb.
+- clean_all_pdb_files(folder): Cleans all PDB files in a specified
+folder by keeping only the non-hetero parts of a protein.
+
+Main Function:
+The main() function is the entry point of the script. It parses command-line
+arguments for the output folder and CSV file, and then calls the
+download_and_uncompress_files(), rename_files(),
+and clean_all_pdb_files() functions.
+
+Execution:
+The script is executed from the command line with the following arguments:
+- --output_folder: The directory to save the cleaned files.
+- --csv_file: The CSV file to use.
+
+Example usage:
+python script.py --output_folder /path/to/output/folder
+--csv_file /path/to/csv/file.csv
+
+Please replace /path/to/output/folder and
+/path/to/csv/file.csv with your actual paths.
+
+This script is designed to be used with Python 3.
+Please ensure that you have the necessary
+Python packages installed before running the script.
+You can install the necessary packages
+using pip or by creating an environment as stated in the README.md file.
+
+"""
+
 import os
-import time
 import glob
 import subprocess
 import argparse
 from Bio.PDB import PDBParser, PDBIO, Select
+
 
 # Canonical Aminoacid residues to keep in PDB sequences
 CANONICAL_RESIDUES = [
