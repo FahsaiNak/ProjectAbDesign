@@ -27,6 +27,14 @@ This project transforms the antibody design framework developed by Aguilar Range
 Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
 
 1. PDB90 database
+- Ensure you have at least 30gb of free space for the PDB90 files.
+- Download full list of PDB sequences. This repository currently has a list of 10 PDB in the somePDB.csv file that was used for testing. The full list can be found in this [PDBlist](https://o365coloradoedu-my.sharepoint.com/:x:/g/personal/juha4327_colorado_edu/EcQaEBqqkYdEpS3MmP_dtRsBZM5jxBvEYlvqG2EqtZkdfw?e=mzDOBp)
+- Once the sequence list has been downloaded, modify the PDB90.sh script in the run folder. It currently has python ../src/PDB90.py --output_folder "../Datasets/all_PDB" --csv_file "../data/somePDB.csv" written, change "../data/somePDB.csv" with the location of the downloaded PDB csv file.
+- Run the bash script with:
+  ```sh
+  bash PDB90.sh
+  ```
+- The script will take a long time to run, as there are around 40000 .pdb files that are being downloaded, uncompressed and cleaned.
 
 2. CDR database and fragmented-CDR datasets
 - Navigate to [SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/search/?all=true#downloads)
