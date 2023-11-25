@@ -37,13 +37,13 @@ findAblike() {
     fi
     
     # Run a command (assuming it's a program) using the provided file and calculated 'V'.
-    $2/master --query $1 --targetList PDB90.pds.lst.tmp --rmsdCut $V --matchOut $3/${Name}.match
+    $2/master --query $1 --targetList PDB90.pds.lst.tmp --rmsdCut $V --matchOut ${3}_temp/${Name}.match
     
     # Extract the top 50 lines from the generated match file and save it to a separate file.
-    head -${4} $3/${Name}.match > "${3}_top${4}/${Name}.match"
+    head -${4} ${3}_temp/${Name}.match > "${3}/${Name}.match"
     
     # Remove the original match file.
-    rm $3/${Name}.match
+    rm ${3}_temp/${Name}.match
 }
 export -f findAblike
 eval $(parse_yaml config.yaml)
@@ -58,8 +58,8 @@ find $PDSCDRfrag -type file -name "*.pdb.pds"| sort > CDR.frag.pds.lst.tmp
 echo "Searching for CDR-like regions ..."
 
 # Create Ablike and Ablike_top50 directories if they don't exist.
-[ ! -d $Ablike ] && mkdir $Ablike
-[ ! -d ${Ablike}_top${topselect} ] && mkdir ${Ablike}_top${topselect}
+[ ! -d ${Ablike}_temp ] && mkdir ${Ablike}_temp
+[ ! -d ${Ablike} ] && mkdir ${Ablike}
 
 # Parallelize the process to find CDR-like regions in multiple files.
 parallel -j $core findAblike :::: CDR.frag.pds.lst.tmp ::: $MASTER ::: $Ablike ::: $topselect ::: $maxcutoff
@@ -68,7 +68,7 @@ parallel -j $core findAblike :::: CDR.frag.pds.lst.tmp ::: $MASTER ::: $Ablike :
 rm *lst.tmp
 
 # Remove the entire Ablike directory.
-rm -r $Ablike
+rm -r ${Ablike}_temp
 
 # Delete empty match files in the Ablike_top50 directory.
-find "${Ablike}_top${topselect}" -name "*.match" -empty -delete
+find "${Ablike}" -name "*.match" -empty -delete
