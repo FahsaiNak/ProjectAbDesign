@@ -9,3 +9,4 @@ dependencies:
   - mock
   - pycodestyle
   - pyyaml
+  - snakemake
