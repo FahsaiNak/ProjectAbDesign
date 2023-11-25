@@ -25,7 +25,7 @@ get_info() {
     pdb=$(echo $1| cut -d "/" -f4| cut -d "." -f1)
     
     # Find match files containing the PDB ID and store the results in a temporary file.
-    find ../Datasets/Ablike_top50 -name "*.match" | parallel grep -H ${pdb} > ${pdb}.match.tmp
+    find $5 -name "*.match" | parallel grep -H ${pdb} > ${pdb}.match.tmp
     
     # Check if the temporary match file has content.
     if [ -s ${pdb}.match.tmp ]; then
@@ -70,7 +70,7 @@ find $PDS90 -type file -name "*.pdb.pds" > PDB90.pds.tmp
 
 # Parallelize the process to get Ab-like information for multiple PDB files.
 echo "getting Ab-like info"
-parallel -j $core get_info :::: PDB90.pds.tmp ::: $MASTER ::: $AbAg ::: $PDSCDRfrag
+parallel -j $core get_info :::: PDB90.pds.tmp ::: $MASTER ::: $AbAg ::: $PDSCDRfrag ::: $Ablike
 
 # Remove the temporary file containing PDB90 files.
 rm PDB90.pds.tmp
