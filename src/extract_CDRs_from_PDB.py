@@ -38,7 +38,7 @@ ELEMENT_TO_CHECK = 'N'
 PDB_ID_CHAR = 4
 
 
-def get_letter_to_extract(head_df, query_value):
+def get_letter_to_extract(head_df=None, query_value=None):
     '''Given the head data frame from a pdb file,
        return the letter corresponding
        to the chain of interest
@@ -69,8 +69,7 @@ def get_letter_to_extract(head_df, query_value):
     return let_extract
 
 
-# TODO named parameters for all functions
-def extract_CDR(chain_df, CDR_bounds):
+def extract_CDR(chain_df=None, CDR_bounds=None):
     '''Extracts atoms, residues, and positions from data frame
         containing the chain of interest for specific CDR residue numbers
         according to Chothia numbering
@@ -109,7 +108,7 @@ def extract_CDR(chain_df, CDR_bounds):
     return CDR_df
 
 
-def get_CDR_length(pdb_id, CDR_save_name):
+def get_CDR_length(pdb_id=None, CDR_save_name=None):
     '''Returns the number of residues contained within a pdb file of a CDR
         ----------
         pdb_id: str
@@ -134,12 +133,12 @@ def get_CDR_length(pdb_id, CDR_save_name):
                 CDR_seq = ''.join(seq)
         CDR_length = len(CDR_seq)
         return CDR_length
-    except Exception:  # TODO fix this try except to make more specific
+    except Exception:
         print(f'PDB Const Error for file: {CDR_save_name}')
         return None
 
 
-def save_CDR(CDR_df, pdb_id, CDR_type):
+def save_CDR(CDR_df=None, pdb_id=None, CDR_type=None):
     '''Merges newly extracted atomistic CDR data frame with original pdb file
        and saves this new pdb entry to a specified path
         ----------
@@ -172,7 +171,7 @@ def main():
 
     for index, file in enumerate(files):
 
-        pdb_id = file[-8:-PDB_ID_CHAR]
+        pdb_id = file[:-PDB_ID_CHAR]
         print('Index:', index, pdb_id)
         pdb_df = PandasPdb().read_pdb(CHOTHIA_PDB_FILE_PATH + '/' + file)
 
@@ -188,7 +187,10 @@ def main():
 
             for chain_letter in CHAIN_LETTERS:
 
-                chain_pdb_letter = get_letter_to_extract(head_df, chain_letter)
+                chain_pdb_letter = get_letter_to_extract(
+                    head_df=head_df,
+                    chain_letter=chain_letter
+                )
 
                 if chain_pdb_letter is None:
                     print(f'No H chain in file')
@@ -198,13 +200,19 @@ def main():
                     chain_df = chain_df.reset_index(drop=True)
                     for CDR_type, CDR_bounds in CDR_Hpos.items():
 
-                        CDR_df = extract_CDR(chain_df, CDR_bounds)
+                        CDR_df = extract_CDR(chain_df=chain_df,
+                                             CDR_bounds=CDR_bounds)
 
-                        save_CDR(CDR_df, pdb_id, CDR_type)
+                        save_CDR(CDR_df=CDR_df,
+                                 pdb_id=pdb_id,
+                                 CDR_type=CDR_type)
 
                         CDR_save_name = CDR_FILE_PATH + '/' + pdb_id \
                             + '_' + CDR_type + '.pdb'
-                        CDR_length = get_CDR_length(pdb_id, CDR_save_name)
+                        CDR_length = get_CDR_length(
+                            pdb_id=pdb_id,
+                            CDR_save_name=CDR_save_name
+                        )
 
                         if CDR_length is None:
                             os.remove(CDR_save_name)
