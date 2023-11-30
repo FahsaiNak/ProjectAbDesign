@@ -203,7 +203,6 @@ def main():
                     if chain_letter == 'L':
                         CDR_pos = CDR_Lpos
 
-
                     for CDR_type, CDR_bounds in CDR_pos.items():
 
                         CDR_df = extract_CDR(chain_df=chain_df,
@@ -211,8 +210,8 @@ def main():
 
                         if CDR_df is not None:
                             save_CDR(CDR_df=CDR_df,
-                                    pdb_id=pdb_id,
-                                    CDR_type=CDR_type)
+                                     pdb_id=pdb_id,
+                                     CDR_type=CDR_type)
 
                             CDR_save_name = CDR_FILE_PATH + '/' + pdb_id \
                                 + '_' + CDR_type + '.pdb'
@@ -224,7 +223,8 @@ def main():
                             if CDR_length is None:
                                 os.remove(CDR_save_name)
                             elif CDR_length >= MAX_CDR_LENGTH:
-                                print(f'{CDR_save_name} too long. Removing file')
+                                print(
+                                    f'{CDR_save_name} too long. Removing file')
                                 os.remove(CDR_save_name)
         else:
             print(f"{ELEMENT_TO_CHECK} is not in the DataFrame.")
