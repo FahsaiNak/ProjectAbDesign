@@ -4,7 +4,7 @@ import pandas as pd
 from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser, PDBList
 import processing_utils as ut
-import structure_utils as frut  # TODO change from frut
+import structure_utils as frut
 import os
 import yaml
 
@@ -47,10 +47,11 @@ def get_CDR_frag_dict():
 
     for idx, pdb_id in enumerate(pdb_id_lst):
 
-        print(idx+1, "/", len(pdb_id_lst), pdb_id, "is processing")
+        print(idx+1, "/", len(pdb_id_lst), pdb_id, "is being fragmented")
         resolution = frut.get_resolution(pdb_id)
-        CDR_files = ut.get_list_contains_str(CDR_files, pdb_id)
-        for CDR_file in CDR_files:
+        cur_CDR_files = ut.get_list_contains_str(CDR_files, pdb_id)
+
+        for CDR_file in cur_CDR_files:
 
             next_frag_dict = slide_window(
                 CDR_file=CDR_file, resolution=resolution)
@@ -143,7 +144,7 @@ def main():
     result_df.sort_values(by=["sequence", "resolution"], inplace=True)
     result_df.drop_duplicates(subset=["sequence"], keep='first', inplace=True)
     result_df.reset_index(drop=True, inplace=True)
-
+    print(result_df)
     for ind in result_df.index:
         file = result_df.loc[ind, "CDR_file"]
         start_residue_idx = result_df.loc[ind, "start_residue_idx"]
