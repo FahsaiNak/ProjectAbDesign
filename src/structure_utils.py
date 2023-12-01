@@ -109,6 +109,10 @@ def get_resolution(pdb_id):
                or None if the file is not found.
     """
     structure = get_structurefrompdb(pdb_id)
+
+    if structure is None:
+        return None
+
     resolution = structure.header.get('resolution')
     return resolution
 
