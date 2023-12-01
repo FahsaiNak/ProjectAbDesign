@@ -49,20 +49,24 @@ def get_CDR_frag_dict():
 
         print(idx+1, "/", len(pdb_id_lst), pdb_id, "is being fragmented")
         resolution = frut.get_resolution(pdb_id)
-        cur_CDR_files = ut.get_list_contains_str(CDR_files, pdb_id)
 
-        for CDR_file in cur_CDR_files:
+        if resolution is not None:
+            cur_CDR_files = ut.get_list_contains_str(CDR_files, pdb_id)
 
-            next_frag_dict = slide_window(
-                CDR_file=CDR_file, resolution=resolution)
+            for CDR_file in cur_CDR_files:
 
-            fragment_dict["CDR_file"].extend(next_frag_dict["CDR_file"])
-            fragment_dict["resolution"].extend(next_frag_dict["resolution"])
-            fragment_dict["sequence"].extend(next_frag_dict["sequence"])
-            fragment_dict["start_residue_idx"].extend(
-                next_frag_dict["start_residue_idx"])
-            fragment_dict["last_residue_index_from_end"].extend(
-                next_frag_dict["last_residue_index_from_end"])
+                next_frag_dict = slide_window(
+                    CDR_file=CDR_file, resolution=resolution)
+
+                fragment_dict["CDR_file"].extend(next_frag_dict["CDR_file"])
+                fragment_dict["resolution"].extend(
+                    next_frag_dict["resolution"]
+                )
+                fragment_dict["sequence"].extend(next_frag_dict["sequence"])
+                fragment_dict["start_residue_idx"].extend(
+                    next_frag_dict["start_residue_idx"])
+                fragment_dict["last_residue_index_from_end"].extend(
+                    next_frag_dict["last_residue_index_from_end"])
 
     return fragment_dict
 
@@ -144,7 +148,7 @@ def main():
     result_df.sort_values(by=["sequence", "resolution"], inplace=True)
     result_df.drop_duplicates(subset=["sequence"], keep='first', inplace=True)
     result_df.reset_index(drop=True, inplace=True)
-    print(result_df)
+
     for ind in result_df.index:
         file = result_df.loc[ind, "CDR_file"]
         start_residue_idx = result_df.loc[ind, "start_residue_idx"]
