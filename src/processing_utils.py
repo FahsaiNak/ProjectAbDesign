@@ -43,7 +43,6 @@ def get_list_contains_str(lst, string):
     return [val for val in lst if string in val]
 
 
-
 def call_d3to1():
     """
     Create a dictionary for converting
