@@ -1,7 +1,7 @@
 # ProjectAbDesign
 
 ## About
-This project transforms the antibody design framework developed by Aguilar Rangel et al. [cite](https://doi.org/10.1126/sciadv.abp9540) into an automated workflow.
+This project transforms the antibody design framework developed by Aguilar Rangel et al. [cite](https://doi.org/10.1126/sciadv.abp9540) into an automated workflow. Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
 
 ## Getting started
 
@@ -25,8 +25,7 @@ This project transforms the antibody design framework developed by Aguilar Range
 
 ### Implementation
 
-### Step 1: Antibody-Antigen database construction
-Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
+## Methods
 
 ### Step 1: CDR fragment collection
    - Navigate to [SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/search/?all=true#downloads)
