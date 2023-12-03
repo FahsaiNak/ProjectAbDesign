@@ -27,10 +27,10 @@ This project transforms the antibody design framework developed by Aguilar Range
 Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
 
 1. PDB90 database
-- Ensure you have at least 30gb of free space for the PDB90 files.
-- Download full list of PDB sequences. This repository currently has a list of 10 PDB in the somePDB.csv file that was used for testing. The full list can be found in this [PDBlist](https://o365coloradoedu-my.sharepoint.com/:x:/g/personal/juha4327_colorado_edu/EcQaEBqqkYdEpS3MmP_dtRsBZM5jxBvEYlvqG2EqtZkdfw?e=mzDOBp)
-- Once the sequence list has been downloaded, modify the PDB90.sh script in the run folder. It currently has python ../src/PDB90.py --output_folder "../Datasets/all_PDB" --csv_file "../data/somePDB.csv" written, change "../data/somePDB.csv" with the location of the downloaded PDB csv file.
-- Run the bash script with:
+- Ensure you have enough free space for the PDB90 files of interest.
+- Add a CSV list of target PDB proteins to download in the Datasets directory. The list most have a similar format to the somePDB.csv file in the Datasets directory.
+- Once the sequence list has been added, modify the PDB90.sh script in the run folder. It currently has python ../src/PDB90.py --output_folder "../Datasets/all_PDB" --csv_file "../Datasets/somePDB.csv" written, change "../Datasets/somePDB.csv" with the location of the downloaded PDB csv file.
+- Move to the run directory and run the bash script with:
   ```sh
   bash PDB90.sh
   ```
