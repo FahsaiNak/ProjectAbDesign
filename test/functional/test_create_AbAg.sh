@@ -1,6 +1,9 @@
 test -e ssshtest || wget -q https://raw.githubusercontent.com/ryanlayer/ssshtest/master/ssshtest
 . ssshtest
 
+run PDB90 python ../../src/PDB90.py --output_folder "../../Datasets/all_PDB" --csv_file "../../Datasets/somePDB.csv"
+assert_exit_code 0
+
 run collect_Ablike_7js3 python ../../src/collect_Ablike.py --pdb 7js3 --data_dir ../Datasets/AbAg/
 assert_equal ../Datasets/AbAg/7js3.pkl $( ls ../Datasets/AbAg/7js3.pkl )
 assert_exit_code 0

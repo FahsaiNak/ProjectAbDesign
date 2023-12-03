@@ -1,46 +1,45 @@
 import sys
+import os
+import shutil
+import subprocess
 sys.path.insert(0, "../../src/")  # noqa
 from PDB90 import download_and_uncompress_files, rename_files
 import unittest
-import os
-from unittest import mock
 from Bio.PDB import PDBParser, PDBIO
 
 
 class TestPDB90(unittest.TestCase):
 
-    @mock.patch('os.makedirs')
-    @mock.patch('subprocess.run')
-    def test_folder_creation(self, mock_run, mock_makedirs):
+    def setUp(self):
+        # Create a test directory
+        os.makedirs('test_folder', exist_ok=True)
+
+    def tearDown(self):
+        # Clean up the test directory
+        shutil.rmtree('test_folder')
+
+    def test_folder_creation(self):
         # Test if the function creates the folder when it doesn't exist
-        download_and_uncompress_files('test_folder', 'test.csv')
-        mock_makedirs.assert_called_once_with('test_folder', exist_ok=True)
+        download_and_uncompress_files('test_folder', '../Datasets/PDB90_test.csv')
+        self.assertTrue(os.path.exists('test_folder'))
 
-    @mock.patch('os.makedirs')
-    @mock.patch('subprocess.run')
-    def test_download_and_uncompress_files(self, mock_run, mock_makedirs):
+    def test_download_and_uncompress_files(self):
         # Test if the files are being correctly downloaded and uncompressed
-        with open('test.csv', 'w') as f:
-            f.write('1234,test\n')
-        download_and_uncompress_files('test_folder', 'test.csv')
-        mock_run.assert_any_call(["wget",
-                                  "-P",
-                                  'test_folder',
-                                  "ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/pdb/pdb1234.ent.gz"])  # noqa
-        mock_run.assert_any_call(["gunzip",
-                                  os.path.join('test_folder',
-                                               "pdb1234.ent.gz")])
+        with open('../Datasets/PDB90_test.csv', 'w') as f:
+            f.write('6anr,test\n')  # Use a valid PDB ID for testing
+        download_and_uncompress_files('test_folder', '../Datasets/PDB90_test.csv')
+        # Check if the .ent file exists
+        self.assertTrue(any(os.path.isfile(os.path.join('test_folder', f)) and f.endswith('.ent') for f in os.listdir('test_folder')))
 
-    @mock.patch('glob.glob')
-    @mock.patch('os.rename')
-    def test_rename_files(self, mock_rename, mock_glob):
+    def test_rename_files(self):
         # Test if the files are being correctly renamed
-        mock_glob.return_value = ['test_folder/test1.ent',
-                                  'test_folder/test2.ent']
+        # Create some test files
+        open('test_folder/test1.ent', 'a').close()
+        open('test_folder/test2.ent', 'a').close()
         rename_files('test_folder')
-        calls = [mock.call('test_folder/test1.ent', 'test_folder/t1.e.pdb'),
-                 mock.call('test_folder/test2.ent', 'test_folder/t2.e.pdb')]
-        mock_rename.assert_has_calls(calls)
+        # Check if the files are renamed
+        self.assertTrue(os.path.exists('test_folder/t1.e.pdb'))
+        self.assertTrue(os.path.exists('test_folder/t2.e.pdb'))
 
 
 if __name__ == '__main__':

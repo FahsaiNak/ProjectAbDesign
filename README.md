@@ -23,6 +23,33 @@ This project transforms the antibody design framework developed by Aguilar Range
    conda env create -f environment.yml
    ```
 
+PDB90_directory
+### Step 1: Antibody-Antigen database construction
+Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
+
+1. PDB90 database
+- Ensure you have enough free space for the PDB90 files of interest.
+- Add a CSV list of target PDB proteins to download in the Datasets directory. The list most have a similar format to the somePDB.csv file in the Datasets directory.
+- Once the sequence list has been added, modify the PDB90.sh script in the run folder. It currently has python ../src/PDB90.py --output_folder "../Datasets/all_PDB" --csv_file "../Datasets/somePDB.csv" written, change "../Datasets/somePDB.csv" with the location of the downloaded PDB csv file.
+- Move to the run directory and run the bash script with:
+  ```sh
+  bash PDB90.sh
+  ```
+- The script might take a long time to run depending on the number of PDB files of interest that will be downloaded, uncompressed and cleaned.
+
+2. CDR database and fragmented-CDR datasets
+- Navigate to [SAbDab](https://opig.stats.ox.ac.uk/webapps/sabdab-sabpred/sabdab/search/?all=true#downloads)
+- Click on Downloads on the left hand side of the page
+- Click on Download an archived zip file to download structures
+- Once the zip file is downloaded, extract the chothia zip file and save it into the Datasets directory in the local repository
+- Change directory to the run directory
+- On the command line run:
+  ```sh
+  bash CDR_fragment_database.sh
+  ```
+
+3. CDR-like region identification
+=======
 ### Implementation
 
 ## Methods
@@ -48,6 +75,7 @@ This project transforms the antibody design framework developed by Aguilar Range
    - The script will take a long time to run, as there are around 40000 .pdb files that are being downloaded, uncompressed and cleaned.
 
 ### Step 3: CDR-like region identification
+main
   - Remain in run directory
   - Run Prep_queries_AbAg.sh and Prep_targets_AbAg.sh to convert fragmented-CDRs (queries) and cleaned-PDB90 proteins (targets) in PDB to PDS that is readable for Master program.
     ```sh
