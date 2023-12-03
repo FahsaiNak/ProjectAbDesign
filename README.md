@@ -84,14 +84,15 @@ Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like re
       bash CDR_fragment_database.sh
 
 ### Step 2: Target protein collection and curation
-   - Ensure you have at least 30gb of free space for the PDB90 files.
-   - Download full list of PDB sequences. This repository currently has a list of 10 PDB in the somePDB.csv file that was used for testing. The full list can be found in this [PDBlist](https://o365coloradoedu-my.sharepoint.com/:x:/g/personal/juha4327_colorado_edu/EcQaEBqqkYdEpS3MmP_dtRsBZM5jxBvEYlvqG2EqtZkdfw?e=mzDOBp)
-   - Once the sequence list has been downloaded, modify the PDB90.sh script in the run folder. It currently has python ../src/PDB90.py --output_folder "../Datasets/all_PDB" --csv_file "../data/somePDB.csv" written, change "../data/somePDB.csv" with the location of the downloaded PDB csv file.
-   - Run the bash script with:
+   - Ensure you have enough free space for the PDB90 files of interest.
+   - Add a CSV list of target PDB proteins to download in the Datasets directory. The list most have a similar format to the somePDB.csv file in the Datasets directory.
+   - Once the sequence list has been added, modify the PDB90.sh script in the run folder. It currently has python ../src/PDB90.py --output_folder "../Datasets/all_PDB" --csv_file "../Datasets/somePDB.csv" written, change "../Datasets/somePDB.csv" with the location of the downloaded PDB csv file.
+   - Move to the run directory and run the bash script with:
+   - PDB90 database
      ```sh
      bash PDB90.sh
      ```
-   - The script will take a long time to run, as there are around 40000 .pdb files that are being downloaded, uncompressed and cleaned.
+   - The script might take a long time to run depending on the number of PDB files of interest that will be downloaded, uncompressed and cleaned.
 
 ### Step 3: CDR-like region identification
 main
