@@ -2,53 +2,15 @@
 This script is used for downloading, renaming,
 and cleaning protein data bank (PDB) files.
 
-Modules and Packages:
-- os: Provides functions for interacting with the operating system.
-- time: Provides various time-related functions.
-- glob: Finds all the pathnames matching a specified pattern.
-- subprocess: Allows you to spawn new processes, connect to their
-input/output/error pipes, and obtain their return codes.
-- argparse: Makes it easy to write user-friendly command-line interfaces.
-- Bio.PDB: A Biopython module that focuses on working with crystal
-structures of biological macromolecules.
+Usage:
+    python print_fires.py --output_folder <output_folder> --csv_file <csv_file>
 
-Classes:
-- NotHetero: A class that inherits from the Select class in the Bio.PDB module.
-It is used to select only the non-hetero parts of a protein by removing
-small molecules or ions that are not a main part of the protein.
+Arguments:
+    --output_folder (str): Directory to save the cleaned files (required)
+    --csv_file (str): Path to the CSV file containing the list of files to download (required)
 
-Functions:
-- download_and_uncompress_files(folder, csv_file): Downloads and uncompresses
-PDB files from a given CSV file into a specified folder.
-- rename_files(directory): Renames all files in a specified directory with
-a .ent termination to .pdb.
-- clean_all_pdb_files(folder): Cleans all PDB files in a specified
-folder by keeping only the non-hetero parts of a protein.
-
-Main Function:
-The main() function is the entry point of the script. It parses command-line
-arguments for the output folder and CSV file, and then calls the
-download_and_uncompress_files(), rename_files(),
-and clean_all_pdb_files() functions.
-
-Execution:
-The script is executed from the command line with the following arguments:
-- --output_folder: The directory to save the cleaned files.
-- --csv_file: The CSV file to use.
-
-Example usage:
-python script.py --output_folder /path/to/output/folder
---csv_file /path/to/csv/file.csv
-
-Please replace /path/to/output/folder and
-/path/to/csv/file.csv with your actual paths.
-
-This script is designed to be used with Python 3.
-Please ensure that you have the necessary
-Python packages installed before running the script.
-You can install the necessary packages
-using pip or by creating an environment as stated in the README.md file.
-
+Example:
+    python print_fires.py --output_folder output --csv_file data.csv
 """
 
 import os
@@ -130,28 +92,43 @@ def clean_all_pdb_files(folder):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-                description='Use with CSV file.',
-                prog='print_fires.py')
+    try:
+        parser = argparse.ArgumentParser(
+            description='Use with CSV file.',
+            prog='print_fires.py')
 
-    parser.add_argument('--output_folder',
-                        type=str,
-                        help='Directory to save the cleaned files',
-                        required=True)
+        parser.add_argument('--output_folder',
+                            type=str,
+                            help='Directory to save the cleaned files',
+                            required=True)
 
-    parser.add_argument('--csv_file',
-                        type=str,
-                        help='Add your csv file',
-                        required=True)
+        parser.add_argument('--csv_file',
+                            type=str,
+                            help='Add your csv file',
+                            required=True)
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    folder = args.output_folder
-    csv_file = args.csv_file
+        folder = args.output_folder
+        csv_file = args.csv_file
 
-    download_and_uncompress_files(folder, csv_file)
-    rename_files(folder)
-    clean_all_pdb_files(folder)
+        try:
+            download_and_uncompress_files(folder, csv_file)
+        except Exception as e:
+            print(f"An error occurred while downloading and uncompressing files: {str(e)}")
+
+        try:
+            rename_files(folder)
+        except Exception as e:
+            print(f"An error occurred while renaming files: {str(e)}")
+
+        try:
+            clean_all_pdb_files(folder)
+        except Exception as e:
+            print(f"An error occurred while cleaning PDB files: {str(e)}")
+
+    except Exception as e:
+        print(f"An error occurred in the main function: {str(e)}")
 
 
 if __name__ == "__main__":
