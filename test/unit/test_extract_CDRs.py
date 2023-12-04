@@ -13,6 +13,9 @@ class TestExtractCDR(unittest.TestCase):
         self.pdb_id = '1f58'
         self.chothia_full_path = self.chothia_pdb_path + self.pdb_id + '.pdb'
         self.pdb_df = PandasPdb().read_pdb(self.chothia_full_path)
+        self.pdb_id_no_L = '8bzy'
+        self.no_L_path = self.chothia_pdb_path + self.pdb_id_no_L + '.pdb'
+        self.pdb_df_no_L = PandasPdb().read_pdb(self.no_L_path)
 
     def test_get_letter_to_extract(self):
 
@@ -24,6 +27,11 @@ class TestExtractCDR(unittest.TestCase):
         chain = 'P'
         letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(
             self.pdb_df.df['OTHERS'], chain)
+        self.assertIsNone(letter_to_extract)
+
+        chain = 'L'
+        letter_to_extract = extract_CDRs_from_PDB.get_letter_to_extract(
+            self.pdb_df_no_L.df['OTHERS'], chain)
         self.assertIsNone(letter_to_extract)
 
     def test_extract_CDR(self):
@@ -49,7 +57,7 @@ class TestExtractCDR(unittest.TestCase):
                                                       self.pdb_id +
                                                       '_H1.pdb')
 
-        actual_length = 32-26 + 1 + 4
+        actual_length = 32-26 + 1 + 1
         self.assertEqual(length, actual_length)
 
         length = extract_CDRs_from_PDB.get_CDR_length('bubba',
