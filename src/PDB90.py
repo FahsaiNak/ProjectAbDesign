@@ -50,7 +50,7 @@ class NotHetero(Select):
             return 0
 
 
-def download_and_uncompress_files(folder, csv_file):
+def download_files(folder, csv_file):
     # Create the input_folder if it doesn't exist
     os.makedirs(folder, exist_ok=True)
 
@@ -61,8 +61,12 @@ def download_and_uncompress_files(folder, csv_file):
             file = f"pdb{short_id}.ent.gz"
             # Download the sequence directly from PDB as a compressed file
             subprocess.run(["wget", "-P", folder, f"ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/pdb/{file}"])  # noqa
-            # The file is uncompressed with gunzip
-            subprocess.run(["gunzip", os.path.join(folder, file)])
+
+
+def uncompress_files(directory):
+    # This function uncompresses all .gz files in the directory
+    for file in glob.glob(os.path.join(directory, "*.gz")):
+        subprocess.run(["gunzip", file])
 
 
 def rename_files(directory):
@@ -113,9 +117,14 @@ def main():
         csv_file = args.csv_file
 
         try:
-            download_and_uncompress_files(folder, csv_file)
+            download_files(folder, csv_file)
         except Exception as e:
-            print(f"An error occurred while downloading and uncompressing files: {str(e)}")
+            print(f"An error occurred while downloading files: {str(e)}")
+
+        try:
+            uncompress_files(folder)
+        except Exception as e:
+            print(f"An error occurred while uncompressing files: {str(e)}")
 
         try:
             rename_files(folder)
