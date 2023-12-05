@@ -3,14 +3,14 @@ This script is used for downloading, renaming,
 and cleaning protein data bank (PDB) files.
 
 Usage:
-    python print_fires.py --output_folder <output_folder> --csv_file <csv_file>
+    python PDB90.py --output_folder <output_folder> --csv_file <csv_file>
 
 Arguments:
     --output_folder (str): Directory to save the cleaned files (required)
     --csv_file (str): Path to the CSV file containing the list of files to download (required)
 
 Example:
-    python print_fires.py --output_folder output --csv_file data.csv
+    python PDB90.py --output_folder output --csv_file data.csv
 """
 
 import os
