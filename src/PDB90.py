@@ -60,7 +60,10 @@ def download_files(folder, csv_file):
             short_id = id[:4]
             file = f"pdb{short_id}.ent.gz"
             # Download the sequence directly from PDB as a compressed file
-            subprocess.run(["wget", "-P", folder, f"ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/pdb/{file}"])  # noqa
+            subprocess.run(["wget",
+                            "-P",
+                            folder,
+                            f"ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/pdb/{file}"])  # noqa
 
 
 def uncompress_files(directory):
@@ -118,7 +121,9 @@ def main():
 
         try:
             download_files(folder, csv_file)
-        except Exception as e:
+        except FileNotFoundError:
+            print(f"File {csv_file} not found.")
+        except subprocess.CalledProcessError as e:
             print(f"An error occurred while downloading files: {str(e)}")
 
         try:
