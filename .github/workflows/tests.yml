@@ -139,4 +139,4 @@ jobs:
               environment-file: environment.yml
           - run: |
              cd test/unit
-             python -m test_process_AbAg.py
+             python test_process_AbAg.py
