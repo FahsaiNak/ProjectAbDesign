@@ -1,4 +1,5 @@
 import pickle
+import pandas as pd
 
 
 def open_pickle(filename):
@@ -125,3 +126,21 @@ def parse_string_to_list_chain_letters(input_string):
         raise ValueError("Invalid input string format. Expected format: "
                          "'position_index|chain|amino acid name,...'")
 
+
+def filter_df(unfiltered_df, filename):
+    try:
+        # Read CSV file into a DataFrame
+        pdb_ids = (pd.read_csv(filename,
+                               header=None, index_col=None))[:][0].tolist()
+        # construct a new dataframe from unfiltered_df by
+        filtered_df = unfiltered_df[unfiltered_df['pdb_id'].isin(pdb_ids)]
+        # Check if the filtered DataFrame is empty
+        if filtered_df.empty:
+            raise ValueError(f"None of the provided PDB-IDs in '{filename}' "
+                             f"are present in the provided .pkl")
+
+        else:
+            return filtered_df
+
+    except FileNotFoundError as fnf_err:
+        raise FileNotFoundError(f"File '{filename}' not found.") from fnf_err

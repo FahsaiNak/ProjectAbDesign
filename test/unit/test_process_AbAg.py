@@ -1,6 +1,7 @@
 import unittest
 import sys
 import pickle
+import pandas as pd
 sys.path.insert(0, '../../src')  # noqa
 import process_AbAg_utils as ut
 
@@ -9,7 +10,8 @@ class TestRefactor(unittest.TestCase):
 
     def test_open_pickle_success(self):
         # test_pickle in data folder, contains test_data
-        test_filename = '../../data/test_pickle.pkl'
+        test_filename = \
+            '../Datasets/test_pkl_and_regions_for_vis/test_pickle.pkl'
         test_data = {'example_key': 'example_value'}
 
         try:
@@ -26,7 +28,8 @@ class TestRefactor(unittest.TestCase):
 
     def test_open_pickle_unpickling_error(self):
         # Create an empty file (not a valid pickle file)
-        test_filename = '../../data/corrupted_pickle.pkl'
+        test_filename = \
+            '../Datasets/test_pkl_and_regions_for_vis/corrupted_pickle.pkl'
 
         # Test if the function raises UnpicklingError for an invalid pickle
         # file
@@ -58,6 +61,48 @@ class TestRefactor(unittest.TestCase):
         # format
         with self.assertRaises(ValueError):
             ut.parse_string_to_list_chain_letters('invalid_format_string')
+
+    def test_filter_df_success(self):
+        """
+        Test filtering DataFrame with existing PDB-IDs in the CSV file.
+        """
+        unfiltered_df = pd.DataFrame({
+            'pdb_id': ['1abc', '1abc', '2xyz', '3def'],
+            'value': [10, 47, 20, 30]
+        })
+        test_filename = \
+            '../Datasets/test_pkl_and_regions_for_vis/test_filter_pdb_id.csv'
+        # function call
+        filtered_df = ut.filter_df(unfiltered_df, test_filename)
+        self.assertEqual(len(filtered_df), 2)
+
+    def test_filter_df_file_not_found(self):
+        """
+        Test FileNotFoundError when CSV file is not found.
+        """
+        unfiltered_df = pd.DataFrame({
+            'pdb_id': ['1abc', '1abc', '2xyz', '3def'],
+            'value': [10, 47, 20, 30]
+        })
+        wrong_filename = 'not_a_thing.csv'
+
+        # Call the filter_df function with a non-existing file
+        with self.assertRaises(FileNotFoundError):
+            ut.filter_df(unfiltered_df, wrong_filename)
+
+    def test_filter_df_no_matches_found(self):
+        """
+        Test ValueError when no matching PDB-IDs are found.
+        """
+        unfiltered_df = pd.DataFrame({
+            'pdb_id': ['2abc', '2abc', '2xyz', '3def'],
+            'value': [10, 47, 20, 30]
+        })
+        test_filename = \
+            '../Datasets/test_pkl_and_regions_for_vis/test_filter_pdb_id.csv'
+
+        with self.assertRaises(ValueError):
+            ut.filter_df(unfiltered_df, test_filename)
 
 
 if __name__ == '__main__':

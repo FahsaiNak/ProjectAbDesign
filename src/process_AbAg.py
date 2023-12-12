@@ -1,7 +1,7 @@
 import pandas as pd
 import pickle
 import argparse
-import process_AbAg_utils as ut
+import process_AbAg_utils as ut  # noqa
 
 
 def get_args():
@@ -12,7 +12,11 @@ def get_args():
                         help='filename of abag file, in pickle format',
                         required=True)
     parser.add_argument('--output_filename', type=str,
-                        help='name of output file',required=True)
+                        help='name of output file', required=True)
+    parser.add_argument('--subset_csv_filename', type=str,
+                        help='If only a subset of PDB IDs are required, '
+                             'provide a csv file with these IDs listed in the '
+                             'first column.', required=False)
     args = parser.parse_args()
     return args
 
@@ -39,7 +43,11 @@ def main():
                                  ag_list_ints, ag_list_chains))
     export_df.columns = ['pdb_id', 'ab-like integers', 'ab-like chains',
                          'ag-like integers', 'ag-like chains']
-    export_df.to_csv(args.output_filename, index=False)
+    if not args.subset_csv_filename:
+        export_df.to_csv(args.output_filename, index=False)
+    else:
+        new_export_df = ut.filter_df(export_df, args.subset_csv_filename)
+        new_export_df.to_csv(args.output_filename, index=False)
 
 
 if __name__ == '__main__':
