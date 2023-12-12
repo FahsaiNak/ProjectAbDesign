@@ -34,7 +34,7 @@ export -f findAglike
 
 eval $(parse_yaml config.yaml)
 # Find all pickle files in the AbAg directory and store them in a temporary file.
-find $AbAg -type file -name "*.pkl" > PDB.pkl.tmp
+find $AbAg -type f -name "*.pkl" > PDB.pkl.tmp
 
 # Print a message indicating the search for Ag-like regions.
 echo "searching Ag-like regions"
