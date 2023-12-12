@@ -68,7 +68,7 @@ def refactor_abag(ids_list, ab_list, ag_list):
     return abag_dict
 
 
-def parse_string_to_list(input_string):
+def parse_string_to_list_ints(input_string):
     """
     Parse a string representation of regions into a list of position indices.
 
@@ -79,6 +79,7 @@ def parse_string_to_list(input_string):
 
     Returns:
     - index_list: List of position indices as integers.
+    For example returns [300, 301, 302, 303, 304] for the string above.
 
     Raises:
     - ValueError: If the input string is not in the expected format.
@@ -91,6 +92,35 @@ def parse_string_to_list(input_string):
         # Extract the first part of each item and convert it to an integer
         index_list = [int(item.split('|')[0]) for item in items]
         return index_list
+    except (ValueError, IndexError):
+        raise ValueError("Invalid input string format. Expected format: "
+                         "'position_index|chain|amino acid name,...'")
+
+
+def parse_string_to_list_chain_letters(input_string):
+    """
+    Parse a string representation of regions into a list of chain letters.
+
+    Parameters:
+    - input_string (str): Regions represented as strings with the format:
+      '300|A|TRP,301|A|LEU,302|A|PRO,303|A|LEU,304|A|GLY'
+      'position_index | chain | amino acid, position_index | chain ...'
+
+    Returns:
+    - chain_list: list of chain letters.
+    This would be ['A','A','A','A','A'] for the example string above
+
+    Raises:
+    - ValueError: If the input string is not in the expected format.
+    """
+
+    try:
+        # Split the input string by ","
+        items = input_string.split(',')
+
+        # Extract the second part of each item (chain) and create a list
+        chain_list = [item.split('|')[1] for item in items]
+        return chain_list
     except (ValueError, IndexError):
         raise ValueError("Invalid input string format. Expected format: "
                          "'position_index|chain|amino acid name,...'")

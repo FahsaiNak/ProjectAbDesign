@@ -33,19 +33,31 @@ class TestRefactor(unittest.TestCase):
         with self.assertRaises(pickle.UnpicklingError):
             ut.open_pickle(test_filename)
 
-    def test_parse_string_to_list_success(self):
+    def test_parse_string_to_list_ints_success(self):
         # Test if the function successfully parses the input string
         input_string = '300|A|TRP,301|A|LEU,302|A|PRO,303|A|LEU,304|A|GLY'
         expected_result = [300, 301, 302, 303, 304]
+        result = ut.parse_string_to_list_ints(input_string)
+        self.assertEqual(result, expected_result)
 
-        result = ut.parse_string_to_list(input_string)
+    def test_parse_string_to_list_ints_invalid_format(self):
+        # Test if the function raises ValueError for an invalid input string
+        # format
+        with self.assertRaises(ValueError):
+            ut.parse_string_to_list_ints('invalid_format_string')
+
+    def test_parse_string_to_list_chain_letters_success(self):
+        # Test if the function successfully parses the input string
+        input_string = '300|A|TRP,301|A|LEU,302|A|PRO,303|A|LEU,304|A|GLY'
+        expected_result = ['A', 'A', 'A', 'A', 'A']
+        result = ut.parse_string_to_list_chain_letters(input_string)
         self.assertEqual(result, expected_result)
 
     def test_parse_string_to_list_invalid_format(self):
         # Test if the function raises ValueError for an invalid input string
         # format
         with self.assertRaises(ValueError):
-            ut.parse_string_to_list('invalid_format_string')
+            ut.parse_string_to_list_chain_letters('invalid_format_string')
 
 
 if __name__ == '__main__':
