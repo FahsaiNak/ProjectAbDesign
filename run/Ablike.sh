@@ -49,10 +49,10 @@ export -f findAblike
 eval $(parse_yaml config.yaml)
 
 # Find all PDB90 files with a specific extension and store them in a temporary file.
-find $PDS90 -type file -name "*.pdb.pds" > PDB90.pds.lst.tmp
+find $PDS90 -type f -name "*.pdb.pds" > PDB90.pds.lst.tmp
 
 # Find all CDR fragment files and sort them.
-find $PDSCDRfrag -type file -name "*.pdb.pds"| sort > CDR.frag.pds.lst.tmp
+find $PDSCDRfrag -type f -name "*.pdb.pds"| sort > CDR.frag.pds.lst.tmp
 
 # Print a message indicating the search for CDR-like regions.
 echo "Searching for CDR-like regions ..."
