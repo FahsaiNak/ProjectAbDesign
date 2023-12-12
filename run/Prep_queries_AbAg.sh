@@ -27,7 +27,7 @@ prepQueries() {
 export -f prepQueries
 
 eval $(parse_yaml config.yaml)
-find  $PDBCDRfrag -type file -name "*.pdb" > CDR.lst.tmp
+find  $PDBCDRfrag -type f -name "*.pdb" > CDR.lst.tmp
 echo "The queries are processing..."
 [ ! -d $PDSCDRfrag ] && mkdir $PDSCDRfrag
 parallel -j $core prepQueries :::: CDR.lst.tmp ::: $MASTER ::: $PDSCDRfrag
