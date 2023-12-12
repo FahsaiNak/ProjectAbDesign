@@ -27,7 +27,7 @@ prepTargets() {
 export -f prepTargets
 
 eval $(parse_yaml config.yaml)
-find $PDB90 -type file -name "*.pdb" > PDB.lst.tmp
+find $PDB90 -type f -name "*.pdb" > PDB.lst.tmp
 echo "The targets are processing..."
 [ ! -d $PDS90 ] && mkdir $PDS90
 parallel -j $core prepTargets :::: PDB.lst.tmp ::: $MASTER ::: $PDS90

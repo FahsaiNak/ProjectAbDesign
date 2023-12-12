@@ -42,8 +42,6 @@ def get_list_contains_str(lst, string):
     """
     return [val for val in lst if string in val]
 
-# TODO this method name is not very descriptive should be updated
-
 
 def call_d3to1():
     """

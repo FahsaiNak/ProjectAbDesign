@@ -4,7 +4,7 @@ import pandas as pd
 from biopandas.pdb import PandasPdb
 from Bio.PDB import PDBParser, PDBList
 import processing_utils as ut
-import structure_utils as frut  # TODO change from frut
+import structure_utils as frut
 import os
 import yaml
 
@@ -47,21 +47,26 @@ def get_CDR_frag_dict():
 
     for idx, pdb_id in enumerate(pdb_id_lst):
 
-        print(idx+1, "/", len(pdb_id_lst), pdb_id, "is processing")
+        print(idx+1, "/", len(pdb_id_lst), pdb_id, "is being fragmented")
         resolution = frut.get_resolution(pdb_id)
-        CDR_files = ut.get_list_contains_str(CDR_files, pdb_id)
-        for CDR_file in CDR_files:
 
-            next_frag_dict = slide_window(
-                CDR_file=CDR_file, resolution=resolution)
+        if resolution is not None:
+            cur_CDR_files = ut.get_list_contains_str(CDR_files, pdb_id)
 
-            fragment_dict["CDR_file"].extend(next_frag_dict["CDR_file"])
-            fragment_dict["resolution"].extend(next_frag_dict["resolution"])
-            fragment_dict["sequence"].extend(next_frag_dict["sequence"])
-            fragment_dict["start_residue_idx"].extend(
-                next_frag_dict["start_residue_idx"])
-            fragment_dict["last_residue_index_from_end"].extend(
-                next_frag_dict["last_residue_index_from_end"])
+            for CDR_file in cur_CDR_files:
+
+                next_frag_dict = slide_window(
+                    CDR_file=CDR_file, resolution=resolution)
+
+                fragment_dict["CDR_file"].extend(next_frag_dict["CDR_file"])
+                fragment_dict["resolution"].extend(
+                    next_frag_dict["resolution"]
+                )
+                fragment_dict["sequence"].extend(next_frag_dict["sequence"])
+                fragment_dict["start_residue_idx"].extend(
+                    next_frag_dict["start_residue_idx"])
+                fragment_dict["last_residue_index_from_end"].extend(
+                    next_frag_dict["last_residue_index_from_end"])
 
     return fragment_dict
 
