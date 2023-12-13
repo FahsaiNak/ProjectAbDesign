@@ -7,7 +7,7 @@ PDBCDRs: "../Datasets/CDR_pdb_files"
 PDSCDRfrag: "../Datasets/CDR_fragments_PDS"
 Ablike: "../Datasets/Ablike"
 AbAg: "../Datasets/AbAg"
-PDB_Ab_Chothia: '../Datasets/chothia_pdb_files'
+PDB_Ab_Chothia: "../Datasets/chothia_pdb_files"
 ## Number of Cores used
 core: 2
 ## Global Parameters
