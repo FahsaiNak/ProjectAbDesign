@@ -2,6 +2,7 @@
 
 ## About
 This project transforms a workflow to generate the Antibody-Antigen (AbAg) database in the antibody design framework developed by Aguilar Rangel et al. [cite](https://doi.org/10.1126/sciadv.abp9540) into an automated pipeline. AbAg database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
+![Plot](AbAg.png)
 
 ## Getting started
 
@@ -22,7 +23,7 @@ This project transforms a workflow to generate the Antibody-Antigen (AbAg) datab
    ```sh
    conda env create -f environment.yml
    ```
-### Implementation
+### Implementation (Lindsey)
 
 ## Methods
 
