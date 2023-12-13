@@ -29,8 +29,8 @@ class TestScript(unittest.TestCase):
             f.write('6anr,test\n')  # Use a valid PDB ID for testing
         download_files('test_folder', '../Datasets/test.csv')
         # Check if the .gz file exists
-        self.assertTrue(any(os.path.isfile(os.path.join('test_folder', f)) 
-                            and f.endswith('.gz') for f in os.listdir('test_folder')))
+        self.assertTrue(any(os.path.isfile(os.path.join('test_folder', f))
+                            and f.endswith('.gz') for f in os.listdir('test_folder')))  # noqa
 
     def test_uncompress_files(self):
         """Test if the files are being correctly uncompressed."""
