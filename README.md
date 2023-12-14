@@ -23,7 +23,11 @@ This project transforms a workflow to generate the Antibody-Antigen (AbAg) datab
    ```sh
    conda env create -f environment.yml
    ```
-### Implementation (Lindsey)
+### Implementation 
+
+### Utilizing Snake Make
+   - Update the paths in your configuration file found in the run directory.
+   - To run the snakefile use the following command: snakemake -c1
 
 ## Methods
 
