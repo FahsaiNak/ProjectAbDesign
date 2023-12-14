@@ -63,7 +63,7 @@ export -f get_info
 
 eval $(parse_yaml config.yaml)
 # Find all PDB90 files with a specific extension and store in a temporary file.
-find $PDS90 -type file -name "*.pdb.pds" > PDB90.pds.tmp
+find $PDS90 -type f -name "*.pdb.pds" > PDB90.pds.tmp
 
 # Create the AbAg directory if it doesn't exist.
 [ ! -d $AbAg ] && mkdir $AbAg
