@@ -27,7 +27,9 @@ This project transforms a workflow to generate the Antibody-Antigen (AbAg) datab
 
 ### Utilizing Snake Make
    - Update the paths in your configuration file found in the run directory.
-   - To run the snakefile use the following command: snakemake -c1
+   - Update somePDB.csv in the datasets directory with your complete list of PDB structures of interest
+     
+   - To run the snakefile use the following command: `snakemake -c1`
 
 ## Methods
 
