@@ -1,7 +1,8 @@
 # ProjectAbDesign
 
 ## About
-This project transforms the antibody design framework developed by Aguilar Rangel et al. [cite](https://doi.org/10.1126/sciadv.abp9540) into an automated workflow. Antibody-Antigen (AbAg) database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
+This project transforms a workflow to generate the Antibody-Antigen (AbAg) database in the antibody design framework developed by Aguilar Rangel et al. [cite](https://doi.org/10.1126/sciadv.abp9540) into an automated pipeline. AbAg database is a collection of antigen-like and CDR-like regions in all non-redundant general protein structures reported in the [PDB database](https://www.rcsb.org/docs/programmatic-access/file-download-services).
+![Plot](AbAg.png)
 
 ## Getting started
 
@@ -22,7 +23,13 @@ This project transforms the antibody design framework developed by Aguilar Range
    ```sh
    conda env create -f environment.yml
    ```
-### Implementation
+### Implementation 
+
+### Utilizing Snake Make
+   - Update the paths in your configuration file found in the run directory.
+   - Update somePDB.csv in the datasets directory with your complete list of PDB structures of interest
+     
+   - To run the snakefile use the following command: `snakemake -c1`
 
 ## Methods
 
@@ -69,4 +76,6 @@ This project transforms the antibody design framework developed by Aguilar Range
     ./Aglike.sh
     ```
 
-### Step 5: Structure visualization
+### Step 5: AbAg tranformation (Grace)
+
+## Structure visualization (Grace)

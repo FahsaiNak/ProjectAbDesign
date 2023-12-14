@@ -1,24 +1,24 @@
 rule all:
     input: 
-        'Datasets/AbAg.pkl'
+        'Datasets/AbAg_processed.csv'
 
 rule gen_pdb90:
     input:
-        'data/somePDB.csv'
+        'Datasets/somePDB.csv'
     output:
         'gen_pdb90.temp'
     run:
         shell('cd run && bash PDB90.sh')
         shell('touch gen_pdb90.temp')
 
-#rule gen_cdrfrag:
-#    input:
-#        'data/someCDR.csv' #from SabDab
-#    output:
-#        'gen_cdrfrag.temp'
-#    run:
-#        shell('cd run && bash CDR_fragment_database.sh')
-#        shell('touch gen_cdrfrag.temp')
+rule gen_cdrfrag:
+    input:
+        'gen_pdb90.temp' # It should be something like 'Datasets/chothia_pdb_files/{x}.pdb', but I don't know how to deal with wildcards.
+    output:
+        'gen_cdrfrag.temp'
+    run:
+        shell('cd run && bash CDR_fragment_database.sh')
+        shell('touch gen_cdrfrag.temp')
 
 rule target_prep:
     input: 
@@ -31,7 +31,7 @@ rule target_prep:
 
 rule query_prep:
     input:
-        'target_prep.temp' #should be gen_cdrfrag.temp
+        'gen_cdrfrag.temp'
     output:
         'query_prep.temp'
     run:
@@ -56,3 +56,11 @@ rule find_Aglike:
     run: 
         shell('cd run && bash Aglike.sh')
         shell('rm find_Ablike.temp target_prep.temp query_prep.temp gen_pdb90.temp')
+
+rule get_AbAg:
+    input:
+        'Datasets/AbAg.pkl'
+    output:
+        'Datasets/AbAg_processed.csv'
+    run:
+        shell('cd run && bash get_AbAg.sh')

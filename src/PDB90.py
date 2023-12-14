@@ -7,7 +7,8 @@ Usage:
 
 Arguments:
     --output_folder (str): Directory to save the cleaned files (required)
-    --csv_file (str): Path to the CSV file containing the list of files to download (required)
+    --csv_file (str): Path to the CSV file containing
+    the list of files to download (required)
 
 Example:
     python PDB90.py --output_folder output --csv_file data.csv

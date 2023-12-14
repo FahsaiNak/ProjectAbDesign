@@ -125,3 +125,18 @@ jobs:
         - run: |
             cd test/functional
             bash test_extract_and_frag_CDRs.sh
+
+    run_unittest_process_AbAg:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash -l {0}
+        steps:
+          - uses: actions/checkout@v2
+          - uses: mamba-org/setup-micromamba@v1
+            with:
+              activate-environment: AbDes
+              environment-file: environment.yml
+          - run: |
+             cd test/unit
+             python test_process_AbAg.py
